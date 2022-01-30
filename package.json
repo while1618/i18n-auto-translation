@@ -2,8 +2,7 @@
   "name": "i18n-auto-translate",
   "version": "1.0.0",
   "description": "Auto translate i18n file to desired languages based on your JSON file.",
-  "author": "Dejan.Zdravkovic@fisglobal.com",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc -p .",
