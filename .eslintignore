@@ -1,0 +1,4 @@
+node_modules/
+dist/
+i18n/
+.eslintrc.js
