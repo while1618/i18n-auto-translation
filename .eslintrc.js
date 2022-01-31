@@ -24,7 +24,7 @@ module.exports = {
     '@typescript-eslint/lines-between-class-members': 'off',
     'no-console': 'off',
     'prefer-destructuring': ['error', { object: true, array: false }],
-    'no-underscore-dangle': ['error', { allowAfterThis: true }],
+    'no-underscore-dangle': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }],
     'no-plusplus': 'off',
   },

@@ -1,6 +1,7 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import fs from 'fs';
 import glob from 'glob';
+import { diff } from 'json-diff';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
 import { argv } from './cli';
@@ -39,7 +40,7 @@ export class Translate {
     ) as Record<string, string | object>;
     const valuesForTranslation: string[] = this.getValuesForTranslation(fileForTranslation);
     const writeToLocation = filePath.substring(0, filePath.lastIndexOf('/'));
-    this.translate(fileForTranslation, valuesForTranslation, writeToLocation);
+    this.callTranslateAPI(fileForTranslation, valuesForTranslation, writeToLocation);
   };
 
   private translateFiles = (dirPath: string): void => {
@@ -61,7 +62,7 @@ export class Translate {
     return values;
   };
 
-  private translate = (
+  private callTranslateAPI = (
     fileForTranslation: Record<string, string | object>,
     valuesForTranslation: string[],
     writeToLocation: string
@@ -69,24 +70,26 @@ export class Translate {
     axios
       .post(
         `${Translate.endpoint}/translate`,
-        [
-          {
-            text: valuesForTranslation.join('\n'),
-          },
-        ],
+        [{ text: valuesForTranslation.join('\n') }],
         Translate.axiosConfig
       )
-      .then((response) =>
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        Object.values(response.data[0].translations as TranslateResponse[]).forEach(
-          (value: TranslateResponse) => {
-            const content = this.createTranslatedObject(value.text.split('\n'), fileForTranslation);
-            this.writeToFile(writeToLocation, `${value.to}.json`, content);
-          }
-        )
-      )
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      .catch((error) => console.log(error.response.data));
+      .then((response) => this.onSuccess(response, fileForTranslation, writeToLocation))
+      .catch((error) => console.log(error));
+  };
+
+  private onSuccess = (
+    response: AxiosResponse,
+    fileForTranslation: Record<string, string | object>,
+    writeToLocation: string
+  ): void => {
+    Object.values((response as TranslateResponse).data[0].translations).forEach(
+      (value: TranslateResponseValue) => {
+        let content = this.createTranslatedObject(value.text.split('\n'), fileForTranslation);
+        const filePath = path.join(writeToLocation, `${value.to}.json`);
+        if (fs.existsSync(filePath)) content = this.modifyContentIfNeeded(filePath, content);
+        this.writeToFile(filePath, content);
+      }
+    );
   };
 
   private createTranslatedObject = (
@@ -108,12 +111,25 @@ export class Translate {
     return translatedObject;
   };
 
-  private writeToFile = (
-    writeToLocation: string,
-    fileName: string,
+  private modifyContentIfNeeded = (
+    filePath: string,
     content: Record<string, string | object>
-  ): void => {
-    const filePath = path.join(writeToLocation, fileName);
+  ): Record<string, string | object> => {
+    const contentCopy: Record<string, string | object> = { ...content };
+
+    const existingTranslation: Record<string, string | object> = JSON.parse(
+      fs.readFileSync(filePath, 'utf-8')
+    ) as Record<string, string | object>;
+    const contentDiff: JsonDiff = diff(existingTranslation, content) as JsonDiff;
+    Object.keys(contentDiff).forEach((key: string) => {
+      if (typeof contentDiff[key] !== 'string' && (contentDiff[key] as JsonDiffValue).__old)
+        contentCopy[key] = (contentDiff[key] as JsonDiffValue).__old;
+    });
+
+    return contentCopy;
+  };
+
+  private writeToFile = (filePath: string, content: Record<string, string | object>): void => {
     fs.writeFile(filePath, JSON.stringify(content, null, 2), (error) => {
       if (error) console.log(error.message);
       else console.log(`${filePath} file saved.`);
@@ -122,6 +138,19 @@ export class Translate {
 }
 
 interface TranslateResponse {
+  data: [{ translations: TranslateResponseValue[] }];
+}
+
+interface TranslateResponseValue {
   text: string;
   to: string;
+}
+
+interface JsonDiff {
+  [key: string]: string | JsonDiffValue;
+}
+
+interface JsonDiffValue {
+  __old: string;
+  __new: string;
 }
