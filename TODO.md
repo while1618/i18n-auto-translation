@@ -1,7 +1,7 @@
 # TODO
 - [x] refactor
 - [x] lint
-- [ ] json diff
+- [x] json diff
 - [ ] use other translate providers
 - [ ] README
 - [ ] test

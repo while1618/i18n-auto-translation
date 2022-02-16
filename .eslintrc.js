@@ -21,6 +21,7 @@ module.exports = {
     'prettier/prettier': 'error',
     'import/prefer-default-export': 'off',
     'class-methods-use-this': 'off',
+    '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/lines-between-class-members': 'off',
     'no-console': 'off',
     'prefer-destructuring': ['error', { object: true, array: false }],

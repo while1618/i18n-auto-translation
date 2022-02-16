@@ -32,7 +32,7 @@ export const argv: Arguments = yargs(process.argv.slice(2))
     dirPath: {
       type: 'string',
       alias: 'd',
-      description: 'Path to the directory in witch you want to translate all files recursively.',
+      description: 'Path to the directory in which you want to translate all files recursively.',
     },
     from: {
       type: 'string',
@@ -44,8 +44,7 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       type: 'string',
       alias: 't',
       demandOption: true,
-      description:
-        'To which language(s) you want to translate. If you want multiple languages, divide them with comma. (e.g. -t=ja,de,it)',
+      description: 'To which language you want to translate.',
     },
   })
   .parseSync();
