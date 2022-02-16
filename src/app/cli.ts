@@ -27,17 +27,18 @@ export const argv: Arguments = yargs(process.argv.slice(2))
     filePath: {
       type: 'string',
       alias: 'p',
-      description: 'Path to the single file you want to translate.',
+      description: 'Path to the single JSON file you want to translate.',
     },
     dirPath: {
       type: 'string',
       alias: 'd',
-      description: 'Path to the directory in which you want to translate all files recursively.',
+      description:
+        'Path to the directory in which you want to translate all JSON files recursively.',
     },
     from: {
       type: 'string',
       alias: 'f',
-      description: 'From which language you want to translate. The default is en.',
+      description: 'From which language you want to translate. The default is "en".',
       default: 'en',
     },
     to: {
