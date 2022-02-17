@@ -39,7 +39,8 @@ export class Translate {
   };
 
   private fileForTranslation: JSON = {};
-  private writeToLocation: string = '';
+  private existingTranslation: JSON = {};
+  private translatedFilePath: string = '';
 
   public start = (): void => {
     if (argv.filePath && argv.dirPath)
@@ -52,41 +53,46 @@ export class Translate {
     else if (argv.dirPath) this.translateFiles(argv.dirPath);
   };
 
-  private translateFile = (filePath: string): void => {
-    this.fileForTranslation = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as JSON;
-    this.writeToLocation = path.join(
-      filePath.substring(0, filePath.lastIndexOf('/')),
-      `${argv.to}.json`
-    );
-
-    if (fs.existsSync(this.writeToLocation)) this.translationAlreadyExists();
-    else this.translationDoesNotExists();
-  };
-
-  private translationAlreadyExists(): void {
-    const existingTranslation = JSON.parse(fs.readFileSync(this.writeToLocation, 'utf-8')) as JSON;
-    const diffForTranslation = addedDiff(existingTranslation, this.fileForTranslation) as JSON;
-    const valuesForTranslation = this.getValuesForTranslation(diffForTranslation);
-    this.callTranslateAPI(valuesForTranslation, diffForTranslation);
-  }
-
-  private translationDoesNotExists(): void {
-    const valuesForTranslation = this.getValuesForTranslation(this.fileForTranslation);
-    this.callTranslateAPI(valuesForTranslation, this.fileForTranslation);
-  }
-
   private translateFiles = (dirPath: string): void => {
     const filePaths = glob.sync(`${dirPath}/**/${argv.from}.json`);
     if (filePaths.length === 0) throw new Error(`0 files found for translation in ${dirPath}`);
     filePaths.forEach((filePath) => this.translateFile(filePath));
   };
 
+  private translateFile = (filePath: string): void => {
+    this.fileForTranslation = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as JSON;
+    this.translatedFilePath = path.join(
+      filePath.substring(0, filePath.lastIndexOf('/')),
+      `${argv.to}.json`
+    );
+    if (fs.existsSync(this.translatedFilePath)) this.translationAlreadyExists();
+    else this.translationDoesNotExists();
+  };
+
+  private translationAlreadyExists(): void {
+    this.existingTranslation = JSON.parse(
+      fs.readFileSync(this.translatedFilePath, 'utf-8')
+    ) as JSON;
+    const diffForTranslation = addedDiff(this.existingTranslation, this.fileForTranslation) as JSON;
+    const valuesForTranslation = this.getValuesForTranslation(diffForTranslation);
+    this.callTranslateAPI(valuesForTranslation)
+      .then((response) => this.onSuccess(response, diffForTranslation))
+      .catch((error) => console.log(error));
+  }
+
+  private translationDoesNotExists(): void {
+    const valuesForTranslation = this.getValuesForTranslation(this.fileForTranslation);
+    this.callTranslateAPI(valuesForTranslation)
+      .then((response) => this.onSuccess(response, this.fileForTranslation))
+      .catch((error) => console.log(error));
+  }
+
   private getValuesForTranslation = (object: JSON): string[] => {
     const values: string[] = [];
 
     (function findValues(json: JSON): void {
       Object.values(json).forEach((value) => {
-        if (typeof value === 'object') findValues(value as JSON);
+        if (typeof value === 'object') findValues(value);
         else values.push(value);
       });
     })(object);
@@ -94,18 +100,14 @@ export class Translate {
     return values;
   };
 
-  private callTranslateAPI = (valuesForTranslation: string[], originalObject: JSON): void => {
-    axios
-      .post(
-        `${Translate.endpoint}/translate`,
-        [{ text: valuesForTranslation.join('\n') }],
-        Translate.axiosConfig
-      )
-      .then((response) => this.onSuccess(response, originalObject))
-      .catch((error) => console.log(error));
-  };
+  private callTranslateAPI = (valuesForTranslation: string[]) =>
+    axios.post(
+      `${Translate.endpoint}/translate`,
+      [{ text: valuesForTranslation.join('\n') }],
+      Translate.axiosConfig
+    );
 
-  private onSuccess = (response: AxiosResponse, originalObject: JSON): void => {
+  private onSuccess = (response: AxiosResponse, originalObject: JSON) => {
     Object.values((response as TranslateResponse).data[0].translations).forEach(
       (value: TranslateResponseValue) => this.saveTranslation(value, originalObject)
     );
@@ -115,12 +117,12 @@ export class Translate {
     let content: JSON;
 
     const translatedObject = this.createTranslatedObject(value.text.split('\n'), originalObject);
-    if (fs.existsSync(this.writeToLocation)) {
-      const existingTranslation = JSON.parse(
-        fs.readFileSync(this.writeToLocation, 'utf-8')
+    if (fs.existsSync(this.translatedFilePath)) {
+      const diffForDeletion = deletedDiff(
+        this.existingTranslation,
+        this.fileForTranslation
       ) as JSON;
-      const diffForDeletion = deletedDiff(existingTranslation, this.fileForTranslation) as JSON;
-      content = extend(true, existingTranslation, diffForDeletion, translatedObject) as JSON;
+      content = extend(true, this.existingTranslation, diffForDeletion, translatedObject) as JSON;
     } else {
       content = translatedObject;
     }
@@ -134,12 +136,9 @@ export class Translate {
 
     (function addTranslations(json: JSON): void {
       Object.keys(json).forEach((key: string) => {
-        if (typeof json[key] === 'object') {
-          addTranslations(json[key] as JSON);
-        } else {
-          // eslint-disable-next-line no-param-reassign
-          json[key] = translations[index++];
-        }
+        if (typeof json[key] === 'object') addTranslations(json[key] as JSON);
+        // eslint-disable-next-line no-param-reassign
+        else json[key] = translations[index++];
       });
     })(translatedObject);
 
@@ -147,9 +146,9 @@ export class Translate {
   };
 
   private writeToFile = (content: JSON): void => {
-    fs.writeFile(this.writeToLocation, JSON.stringify(content, null, 2), (error) => {
+    fs.writeFile(this.translatedFilePath, JSON.stringify(content, null, 2), (error) => {
       if (error) console.log(error.message);
-      else console.log(`${this.writeToLocation} file saved.`);
+      else console.log(`${this.translatedFilePath} file saved.`);
     });
   };
 }
