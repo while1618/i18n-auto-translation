@@ -49,12 +49,12 @@ export class Translate {
     if (!argv.filePath && !argv.dirPath)
       throw new Error('You must provide a single file or a directory.');
 
-    if (argv.filePath) this.translateFile(argv.filePath);
-    else if (argv.dirPath) this.translateFiles(argv.dirPath);
+    if (argv.dirPath) this.translateFiles(argv.dirPath);
+    else if (argv.filePath) this.translateFile(argv.filePath);
   };
 
   private translateFiles = (dirPath: string): void => {
-    const filePaths = glob.sync(`${dirPath}/**/${argv.from}.json`);
+    const filePaths: string[] = glob.sync(`${dirPath}/**/${argv.from}.json`);
     if (filePaths.length === 0) throw new Error(`0 files found for translation in ${dirPath}`);
     filePaths.forEach((filePath) => this.translateFile(filePath));
   };
@@ -73,15 +73,18 @@ export class Translate {
     this.existingTranslation = JSON.parse(
       fs.readFileSync(this.translatedFilePath, 'utf-8')
     ) as JSON;
-    const diffForTranslation = addedDiff(this.existingTranslation, this.fileForTranslation) as JSON;
-    const valuesForTranslation = this.getValuesForTranslation(diffForTranslation);
+    const diffForTranslation: JSON = addedDiff(
+      this.existingTranslation,
+      this.fileForTranslation
+    ) as JSON;
+    const valuesForTranslation: string[] = this.getValuesForTranslation(diffForTranslation);
     this.callTranslateAPI(valuesForTranslation)
       .then((response) => this.onSuccess(response, diffForTranslation))
       .catch((error) => console.log(error));
   }
 
   private translationDoesNotExists(): void {
-    const valuesForTranslation = this.getValuesForTranslation(this.fileForTranslation);
+    const valuesForTranslation: string[] = this.getValuesForTranslation(this.fileForTranslation);
     this.callTranslateAPI(valuesForTranslation)
       .then((response) => this.onSuccess(response, this.fileForTranslation))
       .catch((error) => console.log(error));
@@ -100,25 +103,28 @@ export class Translate {
     return values;
   };
 
-  private callTranslateAPI = (valuesForTranslation: string[]) =>
+  private callTranslateAPI = (valuesForTranslation: string[]): Promise<AxiosResponse> =>
     axios.post(
       `${Translate.endpoint}/translate`,
       [{ text: valuesForTranslation.join('\n') }],
       Translate.axiosConfig
     );
 
-  private onSuccess = (response: AxiosResponse, originalObject: JSON) => {
+  private onSuccess = (response: AxiosResponse, originalObject: JSON): void => {
     Object.values((response as TranslateResponse).data[0].translations).forEach(
       (value: TranslateResponseValue) => this.saveTranslation(value, originalObject)
     );
   };
 
-  private saveTranslation = (value: TranslateResponseValue, originalObject: JSON) => {
+  private saveTranslation = (value: TranslateResponseValue, originalObject: JSON): void => {
     let content: JSON;
+    const translatedObject: JSON = this.createTranslatedObject(
+      value.text.split('\n'),
+      originalObject
+    );
 
-    const translatedObject = this.createTranslatedObject(value.text.split('\n'), originalObject);
     if (fs.existsSync(this.translatedFilePath)) {
-      const diffForDeletion = deletedDiff(
+      const diffForDeletion: JSON = deletedDiff(
         this.existingTranslation,
         this.fileForTranslation
       ) as JSON;
@@ -131,8 +137,8 @@ export class Translate {
   };
 
   private createTranslatedObject = (translations: string[], originalObject: JSON): JSON => {
-    const translatedObject = { ...originalObject };
-    let index = 0;
+    const translatedObject: JSON = { ...originalObject };
+    let index: number = 0;
 
     (function addTranslations(json: JSON): void {
       Object.keys(json).forEach((key: string) => {
