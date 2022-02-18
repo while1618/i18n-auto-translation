@@ -117,20 +117,14 @@ export class Translate {
   };
 
   private saveTranslation = (value: TranslateResponseValue, originalObject: JSON): void => {
-    let content: JSON;
-    const translatedObject: JSON = this.createTranslatedObject(
-      value.text.split('\n'),
-      originalObject
-    );
+    let content: JSON = this.createTranslatedObject(value.text.split('\n'), originalObject);
 
     if (fs.existsSync(this.translatedFilePath)) {
       const diffForDeletion: JSON = deletedDiff(
         this.existingTranslation,
         this.fileForTranslation
       ) as JSON;
-      content = extend(true, this.existingTranslation, diffForDeletion, translatedObject) as JSON;
-    } else {
-      content = translatedObject;
+      content = extend(true, this.existingTranslation, diffForDeletion, content) as JSON;
     }
 
     this.writeToFile(content);
