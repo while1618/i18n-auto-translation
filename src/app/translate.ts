@@ -8,10 +8,6 @@ import { argv } from './cli';
 import { JSONObj } from './payload';
 
 export abstract class Translate {
-  private fileForTranslation: JSONObj = {};
-  private existingTranslation: JSONObj = {};
-  private translatedFilePath: string = '';
-
   public translate = (): void => {
     if (argv.filePath && argv.dirPath)
       throw new Error('You should only provide a single file or a directory.');
@@ -30,34 +26,64 @@ export abstract class Translate {
   };
 
   private translateFile = (filePath: string): void => {
-    this.fileForTranslation = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as JSONObj;
-    this.translatedFilePath = path.join(
+    const fileForTranslation = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as JSONObj;
+    const saveTo: string = path.join(
       filePath.substring(0, filePath.lastIndexOf('/')),
       `${argv.to}.json`
     );
-    if (fs.existsSync(this.translatedFilePath)) this.translationAlreadyExists();
-    else this.translationDoesNotExists();
+    if (fs.existsSync(saveTo)) this.translationAlreadyExists(fileForTranslation, saveTo);
+    else this.translationDoesNotExists(fileForTranslation, saveTo);
   };
 
-  private translationAlreadyExists(): void {
-    this.existingTranslation = JSON.parse(
-      fs.readFileSync(this.translatedFilePath, 'utf-8')
-    ) as JSONObj;
-    const diffForTranslation: JSONObj = addedDiff(
-      this.existingTranslation,
-      this.fileForTranslation
-    ) as JSONObj;
-    const valuesForTranslation: string[] = this.getValuesForTranslation(diffForTranslation);
-    this.callTranslateAPI(valuesForTranslation)
-      .then((response) => this.onSuccess(response, diffForTranslation))
-      .catch((error) => this.printError(error as AxiosError));
+  private translationAlreadyExists(fileForTranslation: JSONObj, saveTo: string): void {
+    const existingTranslation = JSON.parse(fs.readFileSync(saveTo, 'utf-8')) as JSONObj;
+    this.deleteIfNeeded(fileForTranslation, existingTranslation, saveTo);
+    this.translateIfNeeded(fileForTranslation, existingTranslation, saveTo);
   }
 
-  private translationDoesNotExists(): void {
-    const valuesForTranslation: string[] = this.getValuesForTranslation(this.fileForTranslation);
-    this.callTranslateAPI(valuesForTranslation)
-      .then((response) => this.onSuccess(response, this.fileForTranslation))
-      .catch((error) => this.printError(error as AxiosError));
+  private deleteIfNeeded = (
+    fileForTranslation: JSONObj,
+    existingTranslation: JSONObj,
+    saveTo: string
+  ) => {
+    const diffForDeletion: JSONObj = deletedDiff(
+      existingTranslation,
+      fileForTranslation
+    ) as JSONObj;
+    if (Object.keys(diffForDeletion).length !== 0) {
+      const content = extend(true, existingTranslation, diffForDeletion) as JSONObj;
+      this.writeToFile(content, saveTo, `Unnecessary lines deleted for: ${saveTo}`);
+    }
+  };
+
+  private translateIfNeeded = (
+    fileForTranslation: JSONObj,
+    existingTranslation: JSONObj,
+    saveTo: string
+  ) => {
+    const diffForTranslation: JSONObj = addedDiff(
+      existingTranslation,
+      fileForTranslation
+    ) as JSONObj;
+    if (Object.keys(diffForTranslation).length !== 0) {
+      const valuesForTranslation: string[] = this.getValuesForTranslation(diffForTranslation);
+      this.callTranslateAPI(valuesForTranslation)
+        .then((response) => this.onSuccess(response, diffForTranslation, saveTo))
+        .catch((error) => this.printError(error as AxiosError));
+    } else {
+      console.log(`Everything already translated for: ${saveTo}`);
+    }
+  };
+
+  private translationDoesNotExists(fileForTranslation: JSONObj, saveTo: string): void {
+    if (Object.keys(fileForTranslation).length !== 0) {
+      const valuesForTranslation: string[] = this.getValuesForTranslation(fileForTranslation);
+      this.callTranslateAPI(valuesForTranslation)
+        .then((response) => this.onSuccess(response, fileForTranslation, saveTo))
+        .catch((error) => this.printError(error as AxiosError));
+    } else {
+      console.log(`Nothing to translate, file is empty: ${saveTo}`);
+    }
   }
 
   private printError = (error: AxiosError) => {
@@ -82,20 +108,21 @@ export abstract class Translate {
 
   protected abstract callTranslateAPI: (valuesForTranslation: string[]) => Promise<AxiosResponse>;
 
-  protected abstract onSuccess: (response: AxiosResponse, originalObject: JSONObj) => void;
+  protected abstract onSuccess: (
+    response: AxiosResponse,
+    originalObject: JSONObj,
+    saveTo: string
+  ) => void;
 
-  protected saveTranslation = (value: string, originalObject: JSONObj): void => {
+  protected saveTranslation = (value: string, originalObject: JSONObj, saveTo: string): void => {
     let content: JSONObj = this.createTranslatedObject(value.split('\n'), originalObject);
-
-    if (fs.existsSync(this.translatedFilePath)) {
-      const diffForDeletion: JSONObj = deletedDiff(
-        this.existingTranslation,
-        this.fileForTranslation
-      ) as JSONObj;
-      content = extend(true, this.existingTranslation, diffForDeletion, content) as JSONObj;
+    let message: string = `File saved: ${saveTo}`;
+    if (fs.existsSync(saveTo)) {
+      const existingTranslation = JSON.parse(fs.readFileSync(saveTo, 'utf-8')) as JSONObj;
+      content = extend(true, existingTranslation, content) as JSONObj;
+      message = `File updated: ${saveTo}`;
     }
-
-    this.writeToFile(content);
+    this.writeToFile(content, saveTo, message);
   };
 
   private createTranslatedObject = (translations: string[], originalObject: JSONObj): JSONObj => {
@@ -113,10 +140,10 @@ export abstract class Translate {
     return translatedObject;
   };
 
-  private writeToFile = (content: JSONObj): void => {
-    fs.writeFile(this.translatedFilePath, JSON.stringify(content, null, 2), (error) => {
+  private writeToFile = (content: JSONObj, saveTo: string, message: string): void => {
+    fs.writeFile(saveTo, JSON.stringify(content, null, 2), (error) => {
       if (error) console.log(error.message);
-      else console.log(`${this.translatedFilePath} file saved.`);
+      else console.log(message);
     });
   };
 }

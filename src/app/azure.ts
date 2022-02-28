@@ -28,9 +28,14 @@ export class Azure extends Translate {
       Azure.axiosConfig
     );
 
-  protected onSuccess = (response: AxiosResponse, originalObject: JSONObj): void => {
+  protected onSuccess = (
+    response: AxiosResponse,
+    originalObject: JSONObj,
+    saveTo: string
+  ): void => {
     Object.values((response as AzureTranslateResponse).data[0].translations).forEach(
-      (value: AzureTranslateResponseValue) => this.saveTranslation(value.text, originalObject)
+      (value: AzureTranslateResponseValue) =>
+        this.saveTranslation(value.text, originalObject, saveTo)
     );
   };
 }
