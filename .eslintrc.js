@@ -23,6 +23,7 @@ module.exports = {
     'class-methods-use-this': 'off',
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/lines-between-class-members': 'off',
+    '@typescript-eslint/restrict-template-expressions': 'off',
     'no-console': 'off',
     'prefer-destructuring': ['error', { object: true, array: false }],
     'no-underscore-dangle': 'off',

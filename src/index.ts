@@ -1,7 +1,7 @@
-import { Translate } from './app/translate';
+import { Azure } from './app/azure';
 
 try {
-  new Translate().start();
+  new Azure().translate();
 } catch (e) {
   if (e instanceof Error) console.log(e.message);
   else console.log(e);

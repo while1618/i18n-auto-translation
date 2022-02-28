@@ -1,48 +1,18 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { addedDiff, deletedDiff } from 'deep-object-diff';
 import fs from 'fs';
 import glob from 'glob';
 import extend from 'just-extend';
 import path from 'path';
-import { v4 as uuid } from 'uuid';
 import { argv } from './cli';
+import { JSONObj } from './payload';
 
-type JSONValue = string | { [x: string]: JSONValue };
-
-interface JSON {
-  [x: string]: JSONValue;
-}
-
-interface TranslateResponse {
-  data: [{ translations: TranslateResponseValue[] }];
-}
-
-interface TranslateResponseValue {
-  text: string;
-}
-
-export class Translate {
-  private static readonly endpoint: string = 'https://api.cognitive.microsofttranslator.com';
-  private static readonly axiosConfig: AxiosRequestConfig = {
-    headers: {
-      'Ocp-Apim-Subscription-Key': argv.key,
-      'Ocp-Apim-Subscription-Region': argv.location,
-      'Content-type': 'application/json',
-      'X-ClientTraceId': uuid(),
-    },
-    params: {
-      'api-version': '3.0',
-      from: argv.from,
-      to: argv.to,
-    },
-    responseType: 'json',
-  };
-
-  private fileForTranslation: JSON = {};
-  private existingTranslation: JSON = {};
+export abstract class Translate {
+  private fileForTranslation: JSONObj = {};
+  private existingTranslation: JSONObj = {};
   private translatedFilePath: string = '';
 
-  public start = (): void => {
+  public translate = (): void => {
     if (argv.filePath && argv.dirPath)
       throw new Error('You should only provide a single file or a directory.');
 
@@ -60,7 +30,7 @@ export class Translate {
   };
 
   private translateFile = (filePath: string): void => {
-    this.fileForTranslation = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as JSON;
+    this.fileForTranslation = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as JSONObj;
     this.translatedFilePath = path.join(
       filePath.substring(0, filePath.lastIndexOf('/')),
       `${argv.to}.json`
@@ -72,28 +42,35 @@ export class Translate {
   private translationAlreadyExists(): void {
     this.existingTranslation = JSON.parse(
       fs.readFileSync(this.translatedFilePath, 'utf-8')
-    ) as JSON;
-    const diffForTranslation: JSON = addedDiff(
+    ) as JSONObj;
+    const diffForTranslation: JSONObj = addedDiff(
       this.existingTranslation,
       this.fileForTranslation
-    ) as JSON;
+    ) as JSONObj;
     const valuesForTranslation: string[] = this.getValuesForTranslation(diffForTranslation);
     this.callTranslateAPI(valuesForTranslation)
       .then((response) => this.onSuccess(response, diffForTranslation))
-      .catch((error) => console.log(error));
+      .catch((error) => this.printError(error as AxiosError));
   }
 
   private translationDoesNotExists(): void {
     const valuesForTranslation: string[] = this.getValuesForTranslation(this.fileForTranslation);
     this.callTranslateAPI(valuesForTranslation)
       .then((response) => this.onSuccess(response, this.fileForTranslation))
-      .catch((error) => console.log(error));
+      .catch((error) => this.printError(error as AxiosError));
   }
 
-  private getValuesForTranslation = (object: JSON): string[] => {
+  private printError = (error: AxiosError) => {
+    console.error('Request Error!');
+    console.log(`Status Code: ${error.response?.status}`);
+    console.log(`Status Text: ${error.response?.statusText}`);
+    console.log(`Data: ${JSON.stringify(error.response?.data)}`);
+  };
+
+  private getValuesForTranslation = (object: JSONObj): string[] => {
     const values: string[] = [];
 
-    (function findValues(json: JSON): void {
+    (function findValues(json: JSONObj): void {
       Object.values(json).forEach((value) => {
         if (typeof value === 'object') findValues(value);
         else values.push(value);
@@ -103,40 +80,31 @@ export class Translate {
     return values;
   };
 
-  private callTranslateAPI = (valuesForTranslation: string[]): Promise<AxiosResponse> =>
-    axios.post(
-      `${Translate.endpoint}/translate`,
-      [{ text: valuesForTranslation.join('\n') }],
-      Translate.axiosConfig
-    );
+  protected abstract callTranslateAPI: (valuesForTranslation: string[]) => Promise<AxiosResponse>;
 
-  private onSuccess = (response: AxiosResponse, originalObject: JSON): void => {
-    Object.values((response as TranslateResponse).data[0].translations).forEach(
-      (value: TranslateResponseValue) => this.saveTranslation(value, originalObject)
-    );
-  };
+  protected abstract onSuccess: (response: AxiosResponse, originalObject: JSONObj) => void;
 
-  private saveTranslation = (value: TranslateResponseValue, originalObject: JSON): void => {
-    let content: JSON = this.createTranslatedObject(value.text.split('\n'), originalObject);
+  protected saveTranslation = (value: string, originalObject: JSONObj): void => {
+    let content: JSONObj = this.createTranslatedObject(value.split('\n'), originalObject);
 
     if (fs.existsSync(this.translatedFilePath)) {
-      const diffForDeletion: JSON = deletedDiff(
+      const diffForDeletion: JSONObj = deletedDiff(
         this.existingTranslation,
         this.fileForTranslation
-      ) as JSON;
-      content = extend(true, this.existingTranslation, diffForDeletion, content) as JSON;
+      ) as JSONObj;
+      content = extend(true, this.existingTranslation, diffForDeletion, content) as JSONObj;
     }
 
     this.writeToFile(content);
   };
 
-  private createTranslatedObject = (translations: string[], originalObject: JSON): JSON => {
-    const translatedObject: JSON = { ...originalObject };
+  private createTranslatedObject = (translations: string[], originalObject: JSONObj): JSONObj => {
+    const translatedObject: JSONObj = { ...originalObject };
     let index: number = 0;
 
-    (function addTranslations(json: JSON): void {
+    (function addTranslations(json: JSONObj): void {
       Object.keys(json).forEach((key: string) => {
-        if (typeof json[key] === 'object') addTranslations(json[key] as JSON);
+        if (typeof json[key] === 'object') addTranslations(json[key] as JSONObj);
         // eslint-disable-next-line no-param-reassign
         else json[key] = translations[index++];
       });
@@ -145,7 +113,7 @@ export class Translate {
     return translatedObject;
   };
 
-  private writeToFile = (content: JSON): void => {
+  private writeToFile = (content: JSONObj): void => {
     fs.writeFile(this.translatedFilePath, JSON.stringify(content, null, 2), (error) => {
       if (error) console.log(error.message);
       else console.log(`${this.translatedFilePath} file saved.`);
