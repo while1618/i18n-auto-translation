@@ -57,7 +57,7 @@ export abstract class Translate {
     fileForTranslation: JSONObj,
     existingTranslation: JSONObj,
     saveTo: string
-  ) => {
+  ): void => {
     const diffForDeletion: JSONObj = deletedDiff(
       existingTranslation,
       fileForTranslation
@@ -72,33 +72,33 @@ export abstract class Translate {
     fileForTranslation: JSONObj,
     existingTranslation: JSONObj,
     saveTo: string
-  ) => {
+  ): void => {
     const diffForTranslation: JSONObj = addedDiff(
       existingTranslation,
       fileForTranslation
     ) as JSONObj;
-    if (Object.keys(diffForTranslation).length !== 0) {
-      const valuesForTranslation: string[] = this.getValuesForTranslation(diffForTranslation);
-      this.callTranslateAPI(valuesForTranslation)
-        .then((response) => this.onSuccess(response, diffForTranslation, saveTo))
-        .catch((error) => this.printError(error as AxiosError));
-    } else {
+    if (Object.keys(diffForTranslation).length === 0) {
       console.log(`Everything already translated for: ${saveTo}`);
+      return;
     }
+    const valuesForTranslation: string[] = this.getValuesForTranslation(diffForTranslation);
+    this.callTranslateAPI(valuesForTranslation)
+      .then((response) => this.onSuccess(response, diffForTranslation, saveTo))
+      .catch((error) => this.printError(error as AxiosError));
   };
 
   private translationDoesNotExists(fileForTranslation: JSONObj, saveTo: string): void {
-    if (Object.keys(fileForTranslation).length !== 0) {
-      const valuesForTranslation: string[] = this.getValuesForTranslation(fileForTranslation);
-      this.callTranslateAPI(valuesForTranslation)
-        .then((response) => this.onSuccess(response, fileForTranslation, saveTo))
-        .catch((error) => this.printError(error as AxiosError));
-    } else {
+    if (Object.keys(fileForTranslation).length === 0) {
       console.log(`Nothing to translate, file is empty: ${saveTo}`);
+      return;
     }
+    const valuesForTranslation: string[] = this.getValuesForTranslation(fileForTranslation);
+    this.callTranslateAPI(valuesForTranslation)
+      .then((response) => this.onSuccess(response, fileForTranslation, saveTo))
+      .catch((error) => this.printError(error as AxiosError));
   }
 
-  private printError = (error: AxiosError) => {
+  private printError = (error: AxiosError): void => {
     console.error('Request Error!');
     console.log(`Status Code: ${error.response?.status}`);
     console.log(`Status Text: ${error.response?.statusText}`);
