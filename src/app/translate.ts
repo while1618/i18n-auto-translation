@@ -22,7 +22,7 @@ export abstract class Translate {
   private translateFiles = (dirPath: string): void => {
     console.log('Finding files for translation...');
     const filePaths: string[] = glob.sync(`${dirPath}/**/${argv.from}.json`, {
-      ignore: `${dirPath}/**/node_modules/**`,
+      ignore: [`${dirPath}/**/node_modules/**`, `${dirPath}/**/dist/**`],
     });
     if (filePaths.length === 0) throw new Error(`0 files found for translation in ${dirPath}`);
     console.log(`${filePaths.length} files found.`);
