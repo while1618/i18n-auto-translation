@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { v4 as uuid } from 'uuid';
-import { argv } from './cli';
-import { AzureTranslateResponse, AzureTranslateResponseValue, JSONObj } from './payload';
-import { Translate } from './translate';
+import { argv } from '../cli';
+import { AzureTranslateResponse, AzureTranslateResponseValue, JSONObj } from '../payload';
+import { Translate } from '../translate';
 
 export class Azure extends Translate {
   private static readonly endpoint: string = 'microsoft-translator-text.p.rapidapi.com';

@@ -11,3 +11,7 @@ export interface AzureTranslateResponse {
 export interface AzureTranslateResponseValue {
   text: string;
 }
+
+export interface JustTranslateResponse {
+  data: { text: string[] };
+}
