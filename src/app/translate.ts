@@ -20,25 +20,34 @@ export abstract class Translate {
   };
 
   private translateFiles = (dirPath: string): void => {
+    console.log('finding files for translation...');
     const filePaths: string[] = glob.sync(`${dirPath}/**/${argv.from}.json`);
     if (filePaths.length === 0) throw new Error(`0 files found for translation in ${dirPath}`);
     filePaths.forEach((filePath) => this.translateFile(filePath));
   };
 
   private translateFile = (filePath: string): void => {
-    const fileForTranslation = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as JSONObj;
-    const saveTo: string = path.join(
-      filePath.substring(0, filePath.lastIndexOf('/')),
-      `${argv.to}.json`
-    );
-    if (fs.existsSync(saveTo)) this.translationAlreadyExists(fileForTranslation, saveTo);
-    else this.translationDoesNotExists(fileForTranslation, saveTo);
+    try {
+      const fileForTranslation = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as JSONObj;
+      const saveTo: string = path.join(
+        filePath.substring(0, filePath.lastIndexOf('/')),
+        `${argv.to}.json`
+      );
+      if (fs.existsSync(saveTo)) this.translationAlreadyExists(fileForTranslation, saveTo);
+      else this.translationDoesNotExists(fileForTranslation, saveTo);
+    } catch (e) {
+      console.log(`${(e as Error).message} at: ${filePath}`);
+    }
   };
 
   private translationAlreadyExists(fileForTranslation: JSONObj, saveTo: string): void {
-    const existingTranslation = JSON.parse(fs.readFileSync(saveTo, 'utf-8')) as JSONObj;
-    this.deleteIfNeeded(fileForTranslation, existingTranslation, saveTo);
-    this.translateIfNeeded(fileForTranslation, existingTranslation, saveTo);
+    try {
+      const existingTranslation = JSON.parse(fs.readFileSync(saveTo, 'utf-8')) as JSONObj;
+      this.deleteIfNeeded(fileForTranslation, existingTranslation, saveTo);
+      this.translateIfNeeded(fileForTranslation, existingTranslation, saveTo);
+    } catch (e) {
+      console.log(`${(e as Error).message} at: ${saveTo}`);
+    }
   }
 
   private deleteIfNeeded = (
