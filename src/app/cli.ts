@@ -3,7 +3,6 @@ import yargs from 'yargs';
 interface Arguments {
   [x: string]: unknown;
   key: string;
-  location: string;
   filePath?: string;
   dirPath?: string;
   from: string;
@@ -17,12 +16,6 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       alias: 'k',
       demandOption: true,
       description: 'Subscription key.',
-    },
-    location: {
-      type: 'string',
-      alias: 'l',
-      description: 'Your region. The default is global.',
-      default: 'global',
     },
     filePath: {
       type: 'string',

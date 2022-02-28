@@ -5,13 +5,13 @@ import { AzureTranslateResponse, AzureTranslateResponseValue, JSONObj } from './
 import { Translate } from './translate';
 
 export class Azure extends Translate {
-  private static readonly endpoint: string = 'https://api.cognitive.microsofttranslator.com';
+  private static readonly endpoint: string = 'microsoft-translator-text.p.rapidapi.com';
   private static readonly axiosConfig: AxiosRequestConfig = {
     headers: {
-      'Ocp-Apim-Subscription-Key': argv.key,
-      'Ocp-Apim-Subscription-Region': argv.location,
-      'Content-type': 'application/json',
       'X-ClientTraceId': uuid(),
+      'X-RapidAPI-Host': Azure.endpoint,
+      'X-RapidAPI-Key': argv.key,
+      'Content-type': 'application/json',
     },
     params: {
       'api-version': '3.0',
@@ -23,7 +23,7 @@ export class Azure extends Translate {
 
   protected callTranslateAPI = (valuesForTranslation: string[]): Promise<AxiosResponse> =>
     axios.post(
-      `${Azure.endpoint}/translate`,
+      `https://${Azure.endpoint}/translate`,
       [{ text: valuesForTranslation.join('\n') }],
       Azure.axiosConfig
     );
