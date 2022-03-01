@@ -16,6 +16,10 @@ export interface DeepTranslateResponse {
   data: { data: { translations: { translatedText: string } } };
 }
 
+export interface LingvanexTranslateResponse {
+  data: { result: string };
+}
+
 export interface NLPTranslateResponse {
   data: { translated_text: { [x: string]: string } };
 }
