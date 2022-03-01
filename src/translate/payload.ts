@@ -15,3 +15,7 @@ export interface JustTranslateResponse {
 export interface DeepTranslateResponse {
   data: { data: { translations: { translatedText: string } } };
 }
+
+export interface NLPTranslateResponse {
+  data: { translated_text: { [x: string]: string } };
+}
