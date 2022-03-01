@@ -16,8 +16,18 @@ export const argv: Arguments = yargs(process.argv.slice(2))
     apiProvider: {
       type: 'string',
       alias: 'a',
-      description:
-        'API Provider. Choose between: google-official(default), azure-official, azure-rapid, aws-official, deep-rapid, just-rapid, lecto-rapid, lingvanex-rapid, nlp-rapid',
+      description: 'API Provider.',
+      choices: [
+        'google-official',
+        'azure-official',
+        'azure-rapid',
+        'aws-official',
+        'deep-rapid',
+        'just-rapid',
+        'lecto-rapid',
+        'lingvanex-rapid',
+        'nlp-rapid',
+      ],
       default: 'google-official',
     },
     key: {
@@ -29,7 +39,7 @@ export const argv: Arguments = yargs(process.argv.slice(2))
     location: {
       type: 'string',
       alias: 'l',
-      description: 'Region used only by Official Azure API. Default is global.',
+      description: 'Your region. Used only by Official Azure API.',
       default: 'global',
     },
     filePath: {
@@ -46,7 +56,7 @@ export const argv: Arguments = yargs(process.argv.slice(2))
     from: {
       type: 'string',
       alias: 'f',
-      description: 'From which language you want to translate. The default is "en".',
+      description: 'From which language you want to translate.',
       default: 'en',
     },
     to: {

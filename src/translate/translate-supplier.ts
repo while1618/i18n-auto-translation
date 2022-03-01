@@ -34,6 +34,6 @@ export class TranslateSupplier {
     'nlp-rapid': new NLPRapidAPI(),
   };
 
-  public static getProvider = (provider: string): Translate | Error =>
-    TranslateSupplier.providers[provider as keyof Providers] || new Error('Unknown API Provider');
+  public static getProvider = (provider: string): Translate =>
+    TranslateSupplier.providers[provider as keyof Providers];
 }
