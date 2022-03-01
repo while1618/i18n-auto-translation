@@ -5,13 +5,13 @@ export interface JSONObj {
 }
 
 export interface AzureTranslateResponse {
-  data: [{ translations: AzureTranslateResponseValue[] }];
-}
-
-export interface AzureTranslateResponseValue {
-  text: string;
+  data: [{ translations: [{ text: string }] }];
 }
 
 export interface JustTranslateResponse {
   data: { text: string[] };
+}
+
+export interface DeepTranslateResponse {
+  data: { data: { translations: { translatedText: string } } };
 }

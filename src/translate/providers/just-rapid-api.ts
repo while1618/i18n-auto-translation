@@ -3,13 +3,13 @@ import { argv } from '../cli';
 import { JSONObj, JustTranslateResponse } from '../payload';
 import { Translate } from '../translate';
 
-export class Just extends Translate {
+export class JustRapidAPI extends Translate {
   private static readonly endpoint: string = 'just-translated.p.rapidapi.com';
 
   protected callTranslateAPI = (valuesForTranslation: string[]): Promise<AxiosResponse> => {
     const axiosConfig: AxiosRequestConfig = {
       headers: {
-        'X-RapidAPI-Host': Just.endpoint,
+        'X-RapidAPI-Host': JustRapidAPI.endpoint,
         'X-RapidAPI-Key': argv.key,
       },
       params: {
@@ -18,7 +18,7 @@ export class Just extends Translate {
       },
       responseType: 'json',
     };
-    return axios.get(`https://${Just.endpoint}/`, axiosConfig);
+    return axios.get(`https://${JustRapidAPI.endpoint}/`, axiosConfig);
   };
 
   protected onSuccess = (

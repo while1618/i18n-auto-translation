@@ -2,7 +2,9 @@ import yargs from 'yargs';
 
 interface Arguments {
   [x: string]: unknown;
+  apiProvider: string;
   key: string;
+  location: string;
   filePath?: string;
   dirPath?: string;
   from: string;
@@ -11,11 +13,24 @@ interface Arguments {
 
 export const argv: Arguments = yargs(process.argv.slice(2))
   .options({
+    apiProvider: {
+      type: 'string',
+      alias: 'a',
+      description:
+        'API Provider. Choose between: google-official(default), azure-official, azure-rapid, aws-official, deep-rapid, just-rapid, lecto-rapid, lingvanex-rapid, nlp-rapid',
+      default: 'google-official',
+    },
     key: {
       type: 'string',
       alias: 'k',
       demandOption: true,
       description: 'Subscription key.',
+    },
+    location: {
+      type: 'string',
+      alias: 'l',
+      description: 'Region used only by Official Azure API. Default is global.',
+      default: 'global',
     },
     filePath: {
       type: 'string',

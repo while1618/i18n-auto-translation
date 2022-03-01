@@ -1,15 +1,15 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { v4 as uuid } from 'uuid';
 import { argv } from '../cli';
-import { AzureTranslateResponse, AzureTranslateResponseValue, JSONObj } from '../payload';
+import { AzureTranslateResponse, JSONObj } from '../payload';
 import { Translate } from '../translate';
 
-export class Azure extends Translate {
+export class AzureRapidAPI extends Translate {
   private static readonly endpoint: string = 'microsoft-translator-text.p.rapidapi.com';
   private static readonly axiosConfig: AxiosRequestConfig = {
     headers: {
       'X-ClientTraceId': uuid(),
-      'X-RapidAPI-Host': Azure.endpoint,
+      'X-RapidAPI-Host': AzureRapidAPI.endpoint,
       'X-RapidAPI-Key': argv.key,
       'Content-type': 'application/json',
     },
@@ -23,9 +23,9 @@ export class Azure extends Translate {
 
   protected callTranslateAPI = (valuesForTranslation: string[]): Promise<AxiosResponse> =>
     axios.post(
-      `https://${Azure.endpoint}/translate`,
+      `https://${AzureRapidAPI.endpoint}/translate`,
       [{ text: valuesForTranslation.join('\n') }],
-      Azure.axiosConfig
+      AzureRapidAPI.axiosConfig
     );
 
   protected onSuccess = (
@@ -33,9 +33,7 @@ export class Azure extends Translate {
     originalObject: JSONObj,
     saveTo: string
   ): void => {
-    Object.values((response as AzureTranslateResponse).data[0].translations).forEach(
-      (value: AzureTranslateResponseValue) =>
-        this.saveTranslation(value.text, originalObject, saveTo)
-    );
+    const value = (response as AzureTranslateResponse).data[0].translations[0].text;
+    this.saveTranslation(value, originalObject, saveTo);
   };
 }
