@@ -1,4 +1,3 @@
-import { AWSOfficialAPI } from './providers/aws-official-api';
 import { AzureOfficialAPI } from './providers/azure-official-api';
 import { AzureRapidAPI } from './providers/azure-rapid-api';
 import { DeepRapidAPI } from './providers/deep-rapid-api';
@@ -13,7 +12,6 @@ interface Providers {
   'google-official': GoogleOfficialAPI;
   'azure-official': AzureOfficialAPI;
   'azure-rapid': AzureRapidAPI;
-  'aws-official': AWSOfficialAPI;
   'deep-rapid': DeepRapidAPI;
   'just-rapid': JustRapidAPI;
   'lecto-rapid': LectoRapidAPI;
@@ -26,7 +24,6 @@ export class TranslateSupplier {
     'google-official': new GoogleOfficialAPI(),
     'azure-official': new AzureOfficialAPI(),
     'azure-rapid': new AzureRapidAPI(),
-    'aws-official': new AWSOfficialAPI(),
     'deep-rapid': new DeepRapidAPI(),
     'just-rapid': new JustRapidAPI(),
     'lecto-rapid': new LectoRapidAPI(),

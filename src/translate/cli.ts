@@ -21,7 +21,6 @@ export const argv: Arguments = yargs(process.argv.slice(2))
         'google-official',
         'azure-official',
         'azure-rapid',
-        'aws-official',
         'deep-rapid',
         'just-rapid',
         'lecto-rapid',

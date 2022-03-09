@@ -12,10 +12,6 @@ export interface AzureTranslateResponse {
   data: [{ translations: [{ text: string }] }];
 }
 
-export interface AWSTranslateResponse {
-  data: object;
-}
-
 export interface DeepTranslateResponse {
   data: { data: { translations: { translatedText: string } } };
 }
