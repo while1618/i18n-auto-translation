@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { argv } from '../cli';
 import { JSONObj, LingvanexTranslateResponse } from '../payload';
 import { Translate } from '../translate';
@@ -14,19 +14,21 @@ export class LingvanexRapidAPI extends Translate {
     responseType: 'json',
   };
 
-  protected callTranslateAPI = (valuesForTranslation: string[]): Promise<AxiosResponse> =>
-    axios.post(
-      `https://${LingvanexRapidAPI.endpoint}/translate`,
-      { data: valuesForTranslation.join('\n'), to: argv.to, from: argv.from, platform: 'api' },
-      LingvanexRapidAPI.axiosConfig
-    );
-
-  protected onSuccess = (
-    response: AxiosResponse,
+  protected callTranslateAPI = (
+    valuesForTranslation: string[],
     originalObject: JSONObj,
     saveTo: string
   ): void => {
-    const value = (response as LingvanexTranslateResponse).data.result;
-    this.saveTranslation(value, originalObject, saveTo);
+    axios
+      .post(
+        `https://${LingvanexRapidAPI.endpoint}/translate`,
+        { data: valuesForTranslation.join('\n'), to: argv.to, from: argv.from, platform: 'api' },
+        LingvanexRapidAPI.axiosConfig
+      )
+      .then((response) => {
+        const value = (response as LingvanexTranslateResponse).data.result;
+        this.saveTranslation(value, originalObject, saveTo);
+      })
+      .catch((error) => this.printAxiosError(error as AxiosError, 'Linganex Rapid API'));
   };
 }

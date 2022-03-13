@@ -1,4 +1,4 @@
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 import { addedDiff, deletedDiff } from 'deep-object-diff';
 import fs from 'fs';
 import glob from 'glob';
@@ -82,9 +82,7 @@ export abstract class Translate {
       return;
     }
     const valuesForTranslation: string[] = this.getValuesForTranslation(diffForTranslation);
-    this.callTranslateAPI(valuesForTranslation)
-      .then((response) => this.onSuccess(response, diffForTranslation, saveTo))
-      .catch((error) => this.printError(error as AxiosError));
+    this.callTranslateAPI(valuesForTranslation, diffForTranslation, saveTo);
   };
 
   private translationDoesNotExists(fileForTranslation: JSONObj, saveTo: string): void {
@@ -93,17 +91,8 @@ export abstract class Translate {
       return;
     }
     const valuesForTranslation: string[] = this.getValuesForTranslation(fileForTranslation);
-    this.callTranslateAPI(valuesForTranslation)
-      .then((response) => this.onSuccess(response, fileForTranslation, saveTo))
-      .catch((error) => this.printError(error as AxiosError));
+    this.callTranslateAPI(valuesForTranslation, fileForTranslation, saveTo);
   }
-
-  private printError = (error: AxiosError): void => {
-    console.error('Request Error!');
-    console.log(`Status Code: ${error.response?.status}`);
-    console.log(`Status Text: ${error.response?.statusText}`);
-    console.log(`Data: ${JSON.stringify(error.response?.data)}`);
-  };
 
   private getValuesForTranslation = (object: JSONObj): string[] => {
     const values: string[] = [];
@@ -118,13 +107,18 @@ export abstract class Translate {
     return values;
   };
 
-  protected abstract callTranslateAPI: (valuesForTranslation: string[]) => Promise<AxiosResponse>;
-
-  protected abstract onSuccess: (
-    response: AxiosResponse,
+  protected abstract callTranslateAPI: (
+    valuesForTranslation: string[],
     originalObject: JSONObj,
     saveTo: string
   ) => void;
+
+  protected printAxiosError = (error: AxiosError, api: string): void => {
+    console.error(`${api} Request Error!`);
+    console.log(`Status Code: ${error.response?.status}`);
+    console.log(`Status Text: ${error.response?.statusText}`);
+    console.log(`Data: ${JSON.stringify(error.response?.data)}`);
+  };
 
   protected saveTranslation = (value: string, originalObject: JSONObj, saveTo: string): void => {
     let content: JSONObj = this.createTranslatedObject(value.split('\n'), originalObject);

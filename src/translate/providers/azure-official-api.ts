@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { v4 as uuid } from 'uuid';
 import { argv } from '../cli';
 import { AzureTranslateResponse, JSONObj } from '../payload';
@@ -21,19 +21,21 @@ export class AzureOfficialAPI extends Translate {
     responseType: 'json',
   };
 
-  protected callTranslateAPI = (valuesForTranslation: string[]): Promise<AxiosResponse> =>
-    axios.post(
-      `https://${AzureOfficialAPI.endpoint}/translate`,
-      [{ text: valuesForTranslation.join('\n') }],
-      AzureOfficialAPI.axiosConfig
-    );
-
-  protected onSuccess = (
-    response: AxiosResponse,
+  protected callTranslateAPI = (
+    valuesForTranslation: string[],
     originalObject: JSONObj,
     saveTo: string
   ): void => {
-    const value = (response as AzureTranslateResponse).data[0].translations[0].text;
-    this.saveTranslation(value, originalObject, saveTo);
+    axios
+      .post(
+        `https://${AzureOfficialAPI.endpoint}/translate`,
+        [{ text: valuesForTranslation.join('\n') }],
+        AzureOfficialAPI.axiosConfig
+      )
+      .then((response) => {
+        const value = (response as AzureTranslateResponse).data[0].translations[0].text;
+        this.saveTranslation(value, originalObject, saveTo);
+      })
+      .catch((error) => this.printAxiosError(error as AxiosError, 'Azure Official API'));
   };
 }

@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { argv } from '../cli';
 import { JSONObj, NLPTranslateResponse } from '../payload';
 import { Translate } from '../translate';
@@ -14,19 +14,21 @@ export class NLPRapidAPI extends Translate {
     responseType: 'json',
   };
 
-  protected callTranslateAPI = (valuesForTranslation: string[]): Promise<AxiosResponse> =>
-    axios.post(
-      `https://${NLPRapidAPI.endpoint}/v1/translate`,
-      { text: valuesForTranslation.join('\n'), to: argv.to, from: argv.from },
-      NLPRapidAPI.axiosConfig
-    );
-
-  protected onSuccess = (
-    response: AxiosResponse,
+  protected callTranslateAPI = (
+    valuesForTranslation: string[],
     originalObject: JSONObj,
     saveTo: string
   ): void => {
-    const value = (response as NLPTranslateResponse).data.translated_text[argv.to];
-    this.saveTranslation(value, originalObject, saveTo);
+    axios
+      .post(
+        `https://${NLPRapidAPI.endpoint}/v1/translate`,
+        { text: valuesForTranslation.join('\n'), to: argv.to, from: argv.from },
+        NLPRapidAPI.axiosConfig
+      )
+      .then((response) => {
+        const value = (response as NLPTranslateResponse).data.translated_text[argv.to];
+        this.saveTranslation(value, originalObject, saveTo);
+      })
+      .catch((error) => this.printAxiosError(error as AxiosError, 'NLP Rapid API'));
   };
 }

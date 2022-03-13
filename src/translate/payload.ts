@@ -4,10 +4,6 @@ export interface JSONObj {
   [x: string]: JSONValue;
 }
 
-export interface GoogleTranslateResponse {
-  data: object;
-}
-
 export interface AzureTranslateResponse {
   data: [{ translations: [{ text: string }] }];
 }

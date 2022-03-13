@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { argv } from '../cli';
 import { JSONObj, LectoTranslateResponse } from '../payload';
 import { Translate } from '../translate';
@@ -14,19 +14,21 @@ export class LectoRapidAPI extends Translate {
     responseType: 'json',
   };
 
-  protected callTranslateAPI = (valuesForTranslation: string[]): Promise<AxiosResponse> =>
-    axios.post(
-      `https://${LectoRapidAPI.endpoint}/v1/translate/text`,
-      { texts: [valuesForTranslation.join('\n')], to: [argv.to], from: argv.from },
-      LectoRapidAPI.axiosConfig
-    );
-
-  protected onSuccess = (
-    response: AxiosResponse,
+  protected callTranslateAPI = (
+    valuesForTranslation: string[],
     originalObject: JSONObj,
     saveTo: string
   ): void => {
-    const value = (response as LectoTranslateResponse).data.translations[0].translated[0];
-    this.saveTranslation(value, originalObject, saveTo);
+    axios
+      .post(
+        `https://${LectoRapidAPI.endpoint}/v1/translate/text`,
+        { texts: [valuesForTranslation.join('\n')], to: [argv.to], from: argv.from },
+        LectoRapidAPI.axiosConfig
+      )
+      .then((response) => {
+        const value = (response as LectoTranslateResponse).data.translations[0].translated[0];
+        this.saveTranslation(value, originalObject, saveTo);
+      })
+      .catch((error) => this.printAxiosError(error as AxiosError, 'Lecto Rapid API'));
   };
 }

@@ -33,7 +33,7 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       type: 'string',
       alias: 'k',
       demandOption: true,
-      description: 'Subscription key.',
+      description: 'Subscription key for API provider.',
     },
     location: {
       type: 'string',
@@ -50,7 +50,7 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       type: 'string',
       alias: 'd',
       description:
-        'Path to the directory in which you want to translate all JSON files recursively.',
+        'Path to the directory in which you want to translate all JSON files(named <from>.json e.g. en.json) recursively.',
     },
     from: {
       type: 'string',
