@@ -3,6 +3,8 @@
   "version": "1.0.3",
   "description": "Auto translate i18n JSON file(s) to desired language(s).",
   "main": "dist/index.js",
+  "license": "MIT",
+  "homepage": "https://github.com/while1618/i18n-auto-translation",
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc -p .",
@@ -16,6 +18,10 @@
     "translation",
     "google translate"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/while1618/i18n-auto-translation.git"
+  },
   "dependencies": {
     "@google-cloud/translate": "6.3.1",
     "axios": "0.26.1",
