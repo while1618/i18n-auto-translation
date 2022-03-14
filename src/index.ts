@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { argv } from './translate/cli';
 import { TranslateSupplier } from './translate/translate-supplier';
 
