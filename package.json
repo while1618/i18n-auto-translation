@@ -1,5 +1,5 @@
 {
-  "name": "i18n-auto-translate",
+  "name": "i18n-auto-translation",
   "version": "1.0.0",
   "description": "Auto translate i18n JSON file(s) to desired language(s).",
   "main": "src/index.ts",
