@@ -16,23 +16,23 @@
   <a href="#license">License</a>
 </p>
 
-# Description
+## Description
 
 i18n-auto-translation helps you translate your JSON internationalization files. You need to pick one of the translate API providers we support, pass the subscription key, language to which you want to translate, path to the file or directory, and you are good to go.
 
-# Installation
+## Installation
 
 ```bash
 $ npm i i18n-auto-translation
 ```
 
-# Usage
+## Usage
 
 ```bash
 $ i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
 ```
 
-## Options
+### Options
 
 | Key                                       | Alias | Description                                                                                          | Default         |
 | ----------------------------------------- | ----- | ---------------------------------------------------------------------------------------------------- | --------------- |
@@ -46,7 +46,7 @@ $ i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
 | --from                                    | -f    | From which language you want to translate.                                                           | en              |
 | --to [required]                           | -t    | To which language you want to translate.                                                             | /               |
 
-# Translate Providers
+## Translate Providers
 
 | Provider                                                                                                                          | CLI usage       |
 | --------------------------------------------------------------------------------------------------------------------------------- | --------------- |
@@ -59,7 +59,7 @@ $ i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
 | [Lingvanex Translate RapidAPI](https://rapidapi.com/Lingvanex/api/lingvanex-translate/)                                           | lingvanex-rapid |
 | [NLP Translation RapidAPI](https://rapidapi.com/gofitech/api/nlp-translation/)                                                    | nlp-rapid       |
 
-## Obtaining keys
+### Obtaining keys
 
 - Google
   - Goto https://console.cloud.google.com/ and create new project.
@@ -74,7 +74,7 @@ $ i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
   - Now you can use your key provided from RapidAPI.
 
 
-# Credits
+## Credits
 
 This software uses the following open source packages:
 
@@ -86,6 +86,6 @@ This software uses the following open source packages:
 - [@google-cloud/translate](https://github.com/googleapis/nodejs-translate)
 - [uuid](https://github.com/uuidjs/uuid)
 
-# License
+## License
 
 - [MIT](LICENSE)
