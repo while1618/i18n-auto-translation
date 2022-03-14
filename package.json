@@ -2,7 +2,7 @@
   "name": "i18n-auto-translation",
   "version": "1.0.2",
   "description": "Auto translate i18n JSON file(s) to desired language(s).",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc -p .",
