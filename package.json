@@ -5,9 +5,10 @@
   "main": "dist/index.js",
   "license": "MIT",
   "homepage": "https://github.com/while1618/i18n-auto-translation",
-  "bin": {
-    "i18n-auto-translate": "dist/index.js"
-  },
+  "bin": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc -p .",
