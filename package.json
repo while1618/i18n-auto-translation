@@ -10,7 +10,12 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "check-updates": "npx npm-check-updates"
   },
-  "private": "true",
+  "keywords": [
+    "i18n",
+    "auto translate",
+    "translation",
+    "google translate"
+  ],
   "dependencies": {
     "@google-cloud/translate": "6.3.1",
     "axios": "0.26.1",
