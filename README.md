@@ -17,6 +17,15 @@
   <a href="#license">License</a>
 </p>
 
+<p align="center">
+  <a href="https://www.npmjs.com/package/i18n-auto-translation" alt="NPM Version">
+    <img src="https://img.shields.io/badge/npm-v1.1.2-blue" />
+  </a>
+  <a href="LICENCE" alt="Licence">
+    <img src="https://img.shields.io/github/license/while1618/i18n-auto-translation" />
+  </a>
+</p>
+  
 ## Description
 
 i18n-auto-translation helps you translate your JSON internationalization files. You need to pick one of the translation API providers that are supported, pass the subscription key, language to which you want to translate, path to the file or directory, and you are good to go.
