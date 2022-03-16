@@ -32,6 +32,12 @@ $ npm i i18n-auto-translation
 $ i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
 ```
 
+### Demo
+
+<video width="1200" height="675" controls>
+  <source src="public/demo.mp4">
+</video>
+
 ### Options
 
 | Key                                       | Alias | Description                                                                                          | Default         |
