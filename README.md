@@ -34,9 +34,7 @@ $ i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
 
 ### Demo
 
-<video width="1200" height="675" controls>
-  <source src="public/demo.mp4">
-</video>
+https://user-images.githubusercontent.com/49982438/158603886-23c9978b-56e0-4f50-a1ce-afdb03ef1291.mp4
 
 ### Options
 
