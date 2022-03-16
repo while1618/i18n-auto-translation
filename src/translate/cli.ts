@@ -33,24 +33,24 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       type: 'string',
       alias: 'k',
       demandOption: true,
-      description: 'Subscription key for API provider.',
+      description: 'Subscription key for the API provider.',
     },
     location: {
       type: 'string',
       alias: 'l',
-      description: 'Your region. Used only by Official Azure API.',
+      description: 'Your region. Used only by the Official Azure API.',
       default: 'global',
     },
     filePath: {
       type: 'string',
       alias: 'p',
-      description: 'Path to the single JSON file you want to translate.',
+      description: 'Path to a single JSON file.',
     },
     dirPath: {
       type: 'string',
       alias: 'd',
       description:
-        'Path to the directory in which you want to translate all JSON files(named <from>.json e.g. en.json) recursively.',
+        'Path to a directory in which you will recursively find all JSON files named [from].json (e.g. en.json)',
     },
     from: {
       type: 'string',

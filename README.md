@@ -11,6 +11,7 @@
   <a href="#description">Description</a> •
   <a href="#installation">Installation</a> •
   <a href="#usage">Usage</a> •
+  <a href="#demo">Demo</a> •
   <a href="#translate-providers">Translate Providers</a> •
   <a href="#credits">Credits</a> •
   <a href="#license">License</a>
@@ -18,12 +19,30 @@
 
 ## Description
 
-i18n-auto-translation helps you translate your JSON internationalization files. You need to pick one of the translate API providers we support, pass the subscription key, language to which you want to translate, path to the file or directory, and you are good to go.
+i18n-auto-translation helps you translate your JSON internationalization files. You need to pick one of the translation API providers that are supported, pass the subscription key, language to which you want to translate, path to the file or directory, and you are good to go.
+
+### How It Works?
+
+- If there is no translation for the file you provided, the complete file will be translated, and the new file will be created with the same structure as the original file, keeping the keys in original language, and translating only values.
+- You can pass a file with the nested JSON objects, and everything will be translated as you expect.
+- The newly created file will be named [to].json. (e.g. sr_latn.json)
+- If the translation for the file already exists, the tool will only translate newly added lines, or delete the one that are no longer in the original file, keeping the structure same as the original file.
+- Don't worry, tool will call an API only for the newly created lines, already translated one will be skipped.
+- Translate APIs are not ideal, and that's why you will need from time to time to override some translations manually, when you manually translate some value, the tool will keep that value, and won't try to translate it again.
+- If you pass a directory, the tool will recursively find all files named [from].json (e.g. en.json), and the translations will be saved in the same directory as the original file(s). All the described above will be still applicable. 
 
 ## Installation
 
+You can install package globally on your machine:
+
 ```bash
-$ npm i i18n-auto-translation
+$ npm i -g i18n-auto-translation
+```
+
+Or save it as dev dependency in your project:
+
+```bash
+$ npm i -D i18n-auto-translation
 ```
 
 ## Usage
@@ -32,23 +51,23 @@ $ npm i i18n-auto-translation
 $ i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
 ```
 
-### Demo
-
-https://user-images.githubusercontent.com/49982438/158603886-23c9978b-56e0-4f50-a1ce-afdb03ef1291.mp4
-
 ### Options
 
-| Key                                       | Alias | Description                                                                                          | Default         |
-| ----------------------------------------- | ----- | ---------------------------------------------------------------------------------------------------- | --------------- |
-| --help                                    | /     | Open CLI help                                                                                        | /               |
-| --version                                 | /     | Check current version                                                                                | /               |
-| --apiProvider                             | -a    | API Provider.                                                                                        | google-official |
-| --key [required]                          | -k    | Subscription key for the API provider.                                                               | /               |
-| --location                                | -l    | Your region. Used only by the Official Azure API.                                                    | global          |
-| --filePath [filePath or dirPath required] | -p    | Path to the single JSON file you want to translate.                                                  | /               |
-| --dirPath [filePath or dirPath required]  | -d    | Path to the directory in which you want to translate all JSON files(named <from>.json e.g. en.json). | /               |
-| --from                                    | -f    | From which language you want to translate.                                                           | en              |
-| --to [required]                           | -t    | To which language you want to translate.                                                             | /               |
+| Key                                       | Alias | Description                                                                                            | Default         |
+| ----------------------------------------- | ----- | ------------------------------------------------------------------------------------------------------ | --------------- |
+| --help                                    | /     | All available options.                                                                                 | /               |
+| --version                                 | /     | Current version.                                                                                       | /               |
+| --apiProvider                             | -a    | API Provider.                                                                                          | google-official |
+| --key [required]                          | -k    | Subscription key for the API provider.                                                                 | /               |
+| --location                                | -l    | Your region. Used only by the Official Azure API.                                                      | global          |
+| --filePath [filePath or dirPath required] | -p    | Path to a single JSON file.                                                                            | /               |
+| --dirPath [filePath or dirPath required]  | -d    | Path to a directory in which you will recursively find all JSON files named [from].json (e.g. en.json) | /               |
+| --from                                    | -f    | From which language you want to translate.                                                             | en              |
+| --to [required]                           | -t    | To which language you want to translate.                                                               | /               |
+
+## Demo
+
+https://user-images.githubusercontent.com/49982438/158603886-23c9978b-56e0-4f50-a1ce-afdb03ef1291.mp4
 
 ## Translate Providers
 
@@ -66,10 +85,10 @@ https://user-images.githubusercontent.com/49982438/158603886-23c9978b-56e0-4f50-
 ### Obtaining keys
 
 - Google
-  - Goto https://console.cloud.google.com/ and create new project.
+  - Goto https://console.cloud.google.com/ and create a new project.
   - In the search bar find “Cloud Translation API” and enable it.
   - Click on credentials -> Create credentials -> API key.
-  - Copy the key and use it for your translations.
+  - Copy the key and use it.
 - Azure
   - Follow the instructions [here](https://docs.microsoft.com/en-us/azure/cognitive-services/translator/quickstart-translator?tabs=nodejs#prerequisites).
 - RapidAPI
@@ -77,6 +96,9 @@ https://user-images.githubusercontent.com/49982438/158603886-23c9978b-56e0-4f50-
   - Go to desired API and switch to the pricing section. There you will find instructions on how to subscribe to the API.
   - Now you can use your key provided from RapidAPI.
 
+### Adding Provider
+
+You don't like supported API providers? You can easily add yours. Go to src/translate/providers, create class for your provider, extend 'Translate' class, and implement 'callTranslateAPI' method. You can check in other providers for examples on how to implement this method. After you added your provider, you just need to register it in 'translate-supplier.ts' and in 'cli.ts' and you are good to go.
 
 ## Credits
 
