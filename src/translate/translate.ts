@@ -114,10 +114,14 @@ export abstract class Translate {
   ) => void;
 
   protected printAxiosError = (error: AxiosError, api: string): void => {
-    console.error(`${api} Request Error!`);
-    console.log(`Status Code: ${error.response?.status}`);
-    console.log(`Status Text: ${error.response?.statusText}`);
-    console.log(`Data: ${JSON.stringify(error.response?.data)}`);
+    if (error.response?.status && error.response.statusText && error.response.data) {
+      console.error(`${api} Request Error!`);
+      console.log(`Status Code: ${error.response?.status}`);
+      console.log(`Status Text: ${error.response?.statusText}`);
+      console.log(`Data: ${JSON.stringify(error.response?.data)}`);
+    } else {
+      console.log(error);
+    }
   };
 
   protected saveTranslation = (value: string, originalObject: JSONObj, saveTo: string): void => {

@@ -24,10 +24,15 @@ export class GoogleOfficialAPI extends Translate {
         this.saveTranslation(value, originalObject, saveTo);
       })
       .catch((error) => {
-        console.error('Google Translate API Request Error!');
-        console.log(`Status Code: ${(error as ErrorResponse).response.statusCode}`);
-        console.log(`Status Text: ${(error as ErrorResponse).response.statusMessage}`);
-        console.log(`Data: ${JSON.stringify((error as ErrorResponse).errors[0].message)}`);
+        const err = error as ErrorResponse;
+        if (err.response.statusCode && err.response.statusMessage && err.errors[0].message) {
+          console.error('Google Translate API Request Error!');
+          console.log(`Status Code: ${err.response.statusCode}`);
+          console.log(`Status Text: ${err.response.statusMessage}`);
+          console.log(`Data: ${JSON.stringify(err.errors[0].message)}`);
+        } else {
+          console.log(error);
+        }
       });
   };
 }
