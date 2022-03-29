@@ -8,6 +8,8 @@ import { argv } from './cli';
 import { JSONObj } from './payload';
 
 export abstract class Translate {
+  protected static readonly sentenceDelimiter: string = '*|*';
+
   public translate = (): void => {
     if (argv.filePath && argv.dirPath)
       throw new Error('You should only provide a single file or a directory.');
@@ -125,7 +127,10 @@ export abstract class Translate {
   };
 
   protected saveTranslation = (value: string, originalObject: JSONObj, saveTo: string): void => {
-    let content: JSONObj = this.createTranslatedObject(value.split('\n'), originalObject);
+    let content: JSONObj = this.createTranslatedObject(
+      value.split(Translate.sentenceDelimiter),
+      originalObject
+    );
     let message: string = `File saved: ${saveTo}`;
     if (fs.existsSync(saveTo)) {
       const existingTranslation = JSON.parse(fs.readFileSync(saveTo, 'utf-8')) as JSONObj;

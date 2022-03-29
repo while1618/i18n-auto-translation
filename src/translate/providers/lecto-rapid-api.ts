@@ -22,7 +22,11 @@ export class LectoRapidAPI extends Translate {
     axios
       .post(
         `https://${LectoRapidAPI.endpoint}/v1/translate/text`,
-        { texts: [valuesForTranslation.join('\n')], to: [argv.to], from: argv.from },
+        {
+          texts: [valuesForTranslation.join(Translate.sentenceDelimiter)],
+          to: [argv.to],
+          from: argv.from,
+        },
         LectoRapidAPI.axiosConfig
       )
       .then((response) => {

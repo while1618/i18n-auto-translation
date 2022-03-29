@@ -15,7 +15,7 @@ export class GoogleOfficialAPI extends Translate {
     saveTo: string
   ): void => {
     new GoogleTranslate({ key: argv.key })
-      .translate(valuesForTranslation.join('\n'), {
+      .translate(valuesForTranslation.join(Translate.sentenceDelimiter), {
         from: argv.from,
         to: argv.to,
       })

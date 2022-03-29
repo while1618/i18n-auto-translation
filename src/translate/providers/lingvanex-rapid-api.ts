@@ -22,7 +22,12 @@ export class LingvanexRapidAPI extends Translate {
     axios
       .post(
         `https://${LingvanexRapidAPI.endpoint}/translate`,
-        { data: valuesForTranslation.join('\n'), to: argv.to, from: argv.from, platform: 'api' },
+        {
+          data: valuesForTranslation.join(Translate.sentenceDelimiter),
+          to: argv.to,
+          from: argv.from,
+          platform: 'api',
+        },
         LingvanexRapidAPI.axiosConfig
       )
       .then((response) => {

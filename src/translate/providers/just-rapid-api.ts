@@ -18,7 +18,7 @@ export class JustRapidAPI extends Translate {
       },
       params: {
         lang: `${argv.from}-${argv.to}`,
-        text: valuesForTranslation.join('\n'),
+        text: valuesForTranslation.join(Translate.sentenceDelimiter),
       },
       responseType: 'json',
     };

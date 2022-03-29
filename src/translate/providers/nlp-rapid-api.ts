@@ -22,7 +22,11 @@ export class NLPRapidAPI extends Translate {
     axios
       .post(
         `https://${NLPRapidAPI.endpoint}/v1/translate`,
-        { text: valuesForTranslation.join('\n'), to: argv.to, from: argv.from },
+        {
+          text: valuesForTranslation.join(Translate.sentenceDelimiter),
+          to: argv.to,
+          from: argv.from,
+        },
         NLPRapidAPI.axiosConfig
       )
       .then((response) => {

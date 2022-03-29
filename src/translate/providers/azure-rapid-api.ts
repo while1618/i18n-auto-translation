@@ -29,7 +29,7 @@ export class AzureRapidAPI extends Translate {
     axios
       .post(
         `https://${AzureRapidAPI.endpoint}/translate`,
-        [{ text: valuesForTranslation.join('\n') }],
+        [{ text: valuesForTranslation.join(Translate.sentenceDelimiter) }],
         AzureRapidAPI.axiosConfig
       )
       .then((response) => {

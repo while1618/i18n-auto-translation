@@ -22,7 +22,11 @@ export class DeepRapidAPI extends Translate {
     axios
       .post(
         `https://${DeepRapidAPI.endpoint}/language/translate/v2`,
-        { q: valuesForTranslation.join('\n'), source: argv.from, target: argv.to },
+        {
+          q: valuesForTranslation.join(Translate.sentenceDelimiter),
+          source: argv.from,
+          target: argv.to,
+        },
         DeepRapidAPI.axiosConfig
       )
       .then((response) => {
