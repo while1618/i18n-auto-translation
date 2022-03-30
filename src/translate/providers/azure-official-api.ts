@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { decode, encode } from 'html-entities';
 import { v4 as uuid } from 'uuid';
 import { argv } from '../cli';
 import { AzureTranslateResponse, JSONObj } from '../payload';
@@ -29,12 +30,12 @@ export class AzureOfficialAPI extends Translate {
     axios
       .post(
         `https://${AzureOfficialAPI.endpoint}/translate`,
-        [{ text: valuesForTranslation.join(Translate.sentenceDelimiter) }],
+        [{ text: encode(valuesForTranslation.join(Translate.sentenceDelimiter)) }],
         AzureOfficialAPI.axiosConfig
       )
       .then((response) => {
         const value = (response as AzureTranslateResponse).data[0].translations[0].text;
-        this.saveTranslation(value, originalObject, saveTo);
+        this.saveTranslation(decode(value), originalObject, saveTo);
       })
       .catch((error) => this.printAxiosError(error as AxiosError, 'Azure Official API'));
   };

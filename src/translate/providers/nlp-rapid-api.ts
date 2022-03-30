@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { decode, encode } from 'html-entities';
 import { argv } from '../cli';
 import { JSONObj, NLPTranslateResponse } from '../payload';
 import { Translate } from '../translate';
@@ -23,7 +24,7 @@ export class NLPRapidAPI extends Translate {
       .post(
         `https://${NLPRapidAPI.endpoint}/v1/translate`,
         {
-          text: valuesForTranslation.join(Translate.sentenceDelimiter),
+          text: encode(valuesForTranslation.join(Translate.sentenceDelimiter)),
           to: argv.to,
           from: argv.from,
         },
@@ -31,7 +32,7 @@ export class NLPRapidAPI extends Translate {
       )
       .then((response) => {
         const value = (response as NLPTranslateResponse).data.translated_text[argv.to];
-        this.saveTranslation(value, originalObject, saveTo);
+        this.saveTranslation(decode(value), originalObject, saveTo);
       })
       .catch((error) => this.printAxiosError(error as AxiosError, 'NLP Rapid API'));
   };

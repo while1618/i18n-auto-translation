@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { decode, encode } from 'html-entities';
 import { argv } from '../cli';
 import { JSONObj, JustTranslateResponse } from '../payload';
 import { Translate } from '../translate';
@@ -18,7 +19,7 @@ export class JustRapidAPI extends Translate {
       },
       params: {
         lang: `${argv.from}-${argv.to}`,
-        text: valuesForTranslation.join(Translate.sentenceDelimiter),
+        text: encode(valuesForTranslation.join(Translate.sentenceDelimiter)),
       },
       responseType: 'json',
     };
@@ -26,7 +27,7 @@ export class JustRapidAPI extends Translate {
       .get(`https://${JustRapidAPI.endpoint}/`, axiosConfig)
       .then((response) => {
         const value = (response as JustTranslateResponse).data.text[0];
-        this.saveTranslation(value, originalObject, saveTo);
+        this.saveTranslation(decode(value), originalObject, saveTo);
       })
       .catch((error) => this.printAxiosError(error as AxiosError, 'Just Rapid API'));
   };

@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { decode, encode } from 'html-entities';
 import { argv } from '../cli';
 import { JSONObj, LingvanexTranslateResponse } from '../payload';
 import { Translate } from '../translate';
@@ -23,7 +24,7 @@ export class LingvanexRapidAPI extends Translate {
       .post(
         `https://${LingvanexRapidAPI.endpoint}/translate`,
         {
-          data: valuesForTranslation.join(Translate.sentenceDelimiter),
+          data: encode(valuesForTranslation.join(Translate.sentenceDelimiter)),
           to: argv.to,
           from: argv.from,
           platform: 'api',
@@ -32,7 +33,7 @@ export class LingvanexRapidAPI extends Translate {
       )
       .then((response) => {
         const value = (response as LingvanexTranslateResponse).data.result;
-        this.saveTranslation(value, originalObject, saveTo);
+        this.saveTranslation(decode(value), originalObject, saveTo);
       })
       .catch((error) => this.printAxiosError(error as AxiosError, 'Linganex Rapid API'));
   };

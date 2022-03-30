@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { decode, encode } from 'html-entities';
 import { argv } from '../cli';
 import { DeepTranslateResponse, JSONObj } from '../payload';
 import { Translate } from '../translate';
@@ -23,7 +24,7 @@ export class DeepRapidAPI extends Translate {
       .post(
         `https://${DeepRapidAPI.endpoint}/language/translate/v2`,
         {
-          q: valuesForTranslation.join(Translate.sentenceDelimiter),
+          q: encode(valuesForTranslation.join(Translate.sentenceDelimiter)),
           source: argv.from,
           target: argv.to,
         },
@@ -31,7 +32,7 @@ export class DeepRapidAPI extends Translate {
       )
       .then((response) => {
         const value = (response as DeepTranslateResponse).data.data.translations.translatedText;
-        this.saveTranslation(value, originalObject, saveTo);
+        this.saveTranslation(decode(value), originalObject, saveTo);
       })
       .catch((error) => this.printAxiosError(error as AxiosError, 'Deep Rapid API'));
   };

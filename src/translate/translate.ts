@@ -8,7 +8,7 @@ import { argv } from './cli';
 import { JSONObj } from './payload';
 
 export abstract class Translate {
-  protected static readonly sentenceDelimiter: string = '*|*';
+  protected static readonly sentenceDelimiter: string = '|*|';
 
   public translate = (): void => {
     if (argv.filePath && argv.dirPath)

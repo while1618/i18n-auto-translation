@@ -1,5 +1,5 @@
 import { Translate as GoogleTranslate } from '@google-cloud/translate/build/src/v2';
-import { decode } from 'html-entities';
+import { decode, encode } from 'html-entities';
 import { argv } from '../cli';
 import { JSONObj } from '../payload';
 import { Translate } from '../translate';
@@ -16,13 +16,13 @@ export class GoogleOfficialAPI extends Translate {
     saveTo: string
   ): void => {
     new GoogleTranslate({ key: argv.key })
-      .translate(valuesForTranslation.join(Translate.sentenceDelimiter), {
+      .translate(encode(valuesForTranslation.join(Translate.sentenceDelimiter)), {
         from: argv.from,
         to: argv.to,
       })
       .then((response) => {
-        const value = decode(response[0]);
-        this.saveTranslation(value, originalObject, saveTo);
+        const value = response[0];
+        this.saveTranslation(decode(value), originalObject, saveTo);
       })
       .catch((error) => {
         const err = error as ErrorResponse;

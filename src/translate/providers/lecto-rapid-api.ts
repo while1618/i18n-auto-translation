@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { decode, encode } from 'html-entities';
 import { argv } from '../cli';
 import { JSONObj, LectoTranslateResponse } from '../payload';
 import { Translate } from '../translate';
@@ -23,7 +24,7 @@ export class LectoRapidAPI extends Translate {
       .post(
         `https://${LectoRapidAPI.endpoint}/v1/translate/text`,
         {
-          texts: [valuesForTranslation.join(Translate.sentenceDelimiter)],
+          texts: [encode(valuesForTranslation.join(Translate.sentenceDelimiter))],
           to: [argv.to],
           from: argv.from,
         },
@@ -31,7 +32,7 @@ export class LectoRapidAPI extends Translate {
       )
       .then((response) => {
         const value = (response as LectoTranslateResponse).data.translations[0].translated[0];
-        this.saveTranslation(value, originalObject, saveTo);
+        this.saveTranslation(decode(value), originalObject, saveTo);
       })
       .catch((error) => this.printAxiosError(error as AxiosError, 'Lecto Rapid API'));
   };
