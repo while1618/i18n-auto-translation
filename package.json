@@ -31,6 +31,7 @@
     "axios": "0.26.1",
     "deep-object-diff": "1.1.7",
     "glob": "7.2.0",
+    "html-entities": "2.3.3",
     "just-extend": "6.0.1",
     "uuid": "8.3.2",
     "yargs": "17.4.0"

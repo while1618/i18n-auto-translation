@@ -19,7 +19,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/i18n-auto-translation" alt="NPM Version">
-    <img src="https://img.shields.io/badge/npm-v1.1.7-blue" />
+    <img src="https://img.shields.io/badge/npm-v1.1.8-blue" />
   </a>
   <a href="LICENSE" alt="License">
     <img src="https://img.shields.io/github/license/while1618/i18n-auto-translation" />
@@ -119,6 +119,7 @@ This software uses the following open source packages:
 - [glob](https://github.com/isaacs/node-glob)
 - [axios](https://github.com/axios/axios)
 - [@google-cloud/translate](https://github.com/googleapis/nodejs-translate)
+- [html-entities](https://github.com/mdevils/html-entities)
 - [uuid](https://github.com/uuidjs/uuid)
 
 ## License
