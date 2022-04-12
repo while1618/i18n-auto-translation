@@ -148,7 +148,7 @@ export abstract class Translate {
       Object.keys(json).forEach((key: string) => {
         if (typeof json[key] === 'object') addTranslations(json[key] as JSONObj);
         // eslint-disable-next-line no-param-reassign
-        else json[key] = translations[index++];
+        else json[key] = translations[index++].trimStart();
       });
     })(translatedObject);
 
