@@ -14,14 +14,13 @@ export class DeepRapidAPI extends Translate {
     },
     responseType: 'json',
   };
-
-  protected callTranslateAPI = (
+  protected callTranslateAPI = async (
     valuesForTranslation: string[],
     originalObject: JSONObj,
     saveTo: string
-  ): void => {
-    axios
-      .post(
+  ): Promise<void> => {
+    try {
+      const response = await axios.post(
         `https://${DeepRapidAPI.endpoint}/language/translate/v2`,
         {
           q: encode(valuesForTranslation.join(Translate.sentenceDelimiter)),
@@ -29,11 +28,12 @@ export class DeepRapidAPI extends Translate {
           target: argv.to,
         },
         DeepRapidAPI.axiosConfig
-      )
-      .then((response) => {
-        const value = (response as DeepTranslateResponse).data.data.translations.translatedText;
-        this.saveTranslation(decode(value), originalObject, saveTo);
-      })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'Deep Rapid API'));
+      );
+
+      const value = (response as DeepTranslateResponse).data.data.translations.translatedText;
+      this.saveTranslation(decode(value), originalObject, saveTo);
+    } catch (error) {
+      this.printAxiosError(error as AxiosError, 'Deep Rapid API');
+    }
   };
 }

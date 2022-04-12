@@ -7,28 +7,28 @@ import { Translate } from '../translate';
 export class JustRapidAPI extends Translate {
   private static readonly endpoint: string = 'just-translated.p.rapidapi.com';
 
-  protected callTranslateAPI = (
+  protected callTranslateAPI = async (
     valuesForTranslation: string[],
     originalObject: JSONObj,
     saveTo: string
-  ): void => {
-    const axiosConfig: AxiosRequestConfig = {
-      headers: {
-        'X-RapidAPI-Host': JustRapidAPI.endpoint,
-        'X-RapidAPI-Key': argv.key,
-      },
-      params: {
-        lang: `${argv.from}-${argv.to}`,
-        text: encode(valuesForTranslation.join(Translate.sentenceDelimiter)),
-      },
-      responseType: 'json',
-    };
-    axios
-      .get(`https://${JustRapidAPI.endpoint}/`, axiosConfig)
-      .then((response) => {
-        const value = (response as JustTranslateResponse).data.text[0];
-        this.saveTranslation(decode(value), originalObject, saveTo);
-      })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'Just Rapid API'));
+  ): Promise<void> => {
+    try {
+      const axiosConfig: AxiosRequestConfig = {
+        headers: {
+          'X-RapidAPI-Host': JustRapidAPI.endpoint,
+          'X-RapidAPI-Key': argv.key,
+        },
+        params: {
+          lang: `${argv.from}-${argv.to}`,
+          text: encode(valuesForTranslation.join(Translate.sentenceDelimiter)),
+        },
+        responseType: 'json',
+      };
+      const response = await axios.get(`https://${JustRapidAPI.endpoint}/`, axiosConfig);
+      const value = (response as JustTranslateResponse).data.text[0];
+      this.saveTranslation(decode(value), originalObject, saveTo);
+    } catch (error) {
+      this.printAxiosError(error as AxiosError, 'Just Rapid API');
+    }
   };
 }

@@ -22,21 +22,22 @@ export class AzureRapidAPI extends Translate {
     responseType: 'json',
   };
 
-  protected callTranslateAPI = (
+  protected callTranslateAPI = async (
     valuesForTranslation: string[],
     originalObject: JSONObj,
     saveTo: string
-  ): void => {
-    axios
-      .post(
+  ): Promise<void> => {
+    try {
+      const response = await axios.post(
         `https://${AzureRapidAPI.endpoint}/translate`,
         [{ text: encode(valuesForTranslation.join(Translate.sentenceDelimiter)) }],
         AzureRapidAPI.axiosConfig
-      )
-      .then((response) => {
-        const value = (response as AzureTranslateResponse).data[0].translations[0].text;
-        this.saveTranslation(decode(value), originalObject, saveTo);
-      })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'Azure Rapid API'));
+      );
+
+      const value = (response as AzureTranslateResponse).data[0].translations[0].text;
+      this.saveTranslation(decode(value), originalObject, saveTo);
+    } catch (error) {
+      this.printAxiosError(error as AxiosError, 'Azure Rapid API');
+    }
   };
 }

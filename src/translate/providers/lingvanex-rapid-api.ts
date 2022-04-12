@@ -15,13 +15,13 @@ export class LingvanexRapidAPI extends Translate {
     responseType: 'json',
   };
 
-  protected callTranslateAPI = (
+  protected callTranslateAPI = async (
     valuesForTranslation: string[],
     originalObject: JSONObj,
     saveTo: string
-  ): void => {
-    axios
-      .post(
+  ): Promise<void> => {
+    try {
+      const response = await axios.post(
         `https://${LingvanexRapidAPI.endpoint}/translate`,
         {
           data: encode(valuesForTranslation.join(Translate.sentenceDelimiter)),
@@ -30,11 +30,11 @@ export class LingvanexRapidAPI extends Translate {
           platform: 'api',
         },
         LingvanexRapidAPI.axiosConfig
-      )
-      .then((response) => {
-        const value = (response as LingvanexTranslateResponse).data.result;
-        this.saveTranslation(decode(value), originalObject, saveTo);
-      })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'Linganex Rapid API'));
+      );
+      const value = (response as LingvanexTranslateResponse).data.result;
+      this.saveTranslation(decode(value), originalObject, saveTo);
+    } catch (error) {
+      this.printAxiosError(error as AxiosError, 'Linganex Rapid API');
+    }
   };
 }

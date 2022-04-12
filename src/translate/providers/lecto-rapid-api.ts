@@ -15,13 +15,13 @@ export class LectoRapidAPI extends Translate {
     responseType: 'json',
   };
 
-  protected callTranslateAPI = (
+  protected callTranslateAPI = async (
     valuesForTranslation: string[],
     originalObject: JSONObj,
     saveTo: string
-  ): void => {
-    axios
-      .post(
+  ): Promise<void> => {
+    try {
+      const response = await axios.post(
         `https://${LectoRapidAPI.endpoint}/v1/translate/text`,
         {
           texts: [encode(valuesForTranslation.join(Translate.sentenceDelimiter))],
@@ -29,11 +29,11 @@ export class LectoRapidAPI extends Translate {
           from: argv.from,
         },
         LectoRapidAPI.axiosConfig
-      )
-      .then((response) => {
-        const value = (response as LectoTranslateResponse).data.translations[0].translated[0];
-        this.saveTranslation(decode(value), originalObject, saveTo);
-      })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'Lecto Rapid API'));
+      );
+      const value = (response as LectoTranslateResponse).data.translations[0].translated[0];
+      this.saveTranslation(decode(value), originalObject, saveTo);
+    } catch (error) {
+      this.printAxiosError(error as AxiosError, 'Lecto Rapid API');
+    }
   };
 }

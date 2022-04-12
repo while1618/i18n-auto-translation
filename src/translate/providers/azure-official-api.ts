@@ -30,23 +30,39 @@ export class AzureOfficialAPI extends Translate {
     responseType: 'json',
   };
 
-  protected callTranslateAPI = (
+  protected callTranslateAPI = async (
     valuesForTranslation: string[],
     originalObject: JSONObj,
     saveTo: string
-  ): void => {
-    axios
-      .post(
+  ): Promise<void> => {
+    let output = '';
+    for (let i = 0; i < valuesForTranslation.length; i++) {
+      const toTranslate = valuesForTranslation[i];
+      // eslint-disable-next-line no-await-in-loop
+      const result = await this.callApi(toTranslate);
+      output += result + Translate.sentenceDelimiter;
+    }
+    const index = output.lastIndexOf(Translate.sentenceDelimiter);
+    output = output.substring(0, index);
+    this.saveTranslation(output, originalObject, saveTo);
+  };
+
+  private callApi = async (toTranslate: string): Promise<string> => {
+    try {
+      console.log(`Fetching result for value: ${toTranslate}`);
+      const result = await axios.post(
         `https://${AzureOfficialAPI.endpoint}/translate`,
-        [{ text: encode(valuesForTranslation.join(Translate.sentenceDelimiter)) }],
+        [{ text: encode(toTranslate) }],
         AzureOfficialAPI.axiosConfig
-      )
-      .then((response) => {
-        let value = (response as AzureTranslateResponse).data[0].translations[0].text;
-        // fix bug where the strings come back with an extra space in the delimiter sometimes
-        value = replaceAll(value, '| *|', Translate.sentenceDelimiter);
-        this.saveTranslation(decode(value), originalObject, saveTo);
-      })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'Azure Official API'));
+      );
+      let value = decode((result as AzureTranslateResponse).data[0].translations[0].text);
+      console.log(`Got result: ${value}`);
+      // fix bug where the strings come back with an extra space in the delimiter sometimes
+      value = replaceAll(value, '| *|', Translate.sentenceDelimiter);
+      return value;
+    } catch (error) {
+      this.printAxiosError(error as AxiosError, 'Azure Official API');
+      return '';
+    }
   };
 }

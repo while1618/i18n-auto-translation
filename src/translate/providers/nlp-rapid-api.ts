@@ -15,13 +15,13 @@ export class NLPRapidAPI extends Translate {
     responseType: 'json',
   };
 
-  protected callTranslateAPI = (
+  protected callTranslateAPI = async (
     valuesForTranslation: string[],
     originalObject: JSONObj,
     saveTo: string
-  ): void => {
-    axios
-      .post(
+  ): Promise<void> => {
+    try {
+      const response = await axios.post(
         `https://${NLPRapidAPI.endpoint}/v1/translate`,
         {
           text: encode(valuesForTranslation.join(Translate.sentenceDelimiter)),
@@ -29,11 +29,12 @@ export class NLPRapidAPI extends Translate {
           from: argv.from,
         },
         NLPRapidAPI.axiosConfig
-      )
-      .then((response) => {
-        const value = (response as NLPTranslateResponse).data.translated_text[argv.to];
-        this.saveTranslation(decode(value), originalObject, saveTo);
-      })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'NLP Rapid API'));
+      );
+
+      const value = (response as NLPTranslateResponse).data.translated_text[argv.to];
+      this.saveTranslation(decode(value), originalObject, saveTo);
+    } catch (error) {
+      this.printAxiosError(error as AxiosError, 'NLP Rapid API');
+    }
   };
 }
