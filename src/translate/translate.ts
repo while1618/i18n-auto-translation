@@ -8,7 +8,7 @@ import { argv } from './cli';
 import { JSONObj } from './payload';
 
 export abstract class Translate {
-  protected static readonly sentenceDelimiter: string = '|*|';
+  protected static readonly sentenceDelimiter: string = ' {|} ';
 
   public translate = (): void => {
     if (argv.filePath && argv.dirPath)
@@ -148,7 +148,7 @@ export abstract class Translate {
       Object.keys(json).forEach((key: string) => {
         if (typeof json[key] === 'object') addTranslations(json[key] as JSONObj);
         // eslint-disable-next-line no-param-reassign
-        else json[key] = translations[index++];
+        else json[key] = translations[index++]?.trimStart();
       });
     })(translatedObject);
 
