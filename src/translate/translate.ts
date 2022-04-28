@@ -128,7 +128,7 @@ export abstract class Translate {
 
   protected saveTranslation = (value: string, originalObject: JSONObj, saveTo: string): void => {
     let content: JSONObj = this.createTranslatedObject(
-      value.split(Translate.sentenceDelimiter),
+      value.split(Translate.sentenceDelimiter.trim()),
       originalObject
     );
     let message: string = `File saved: ${saveTo}`;
