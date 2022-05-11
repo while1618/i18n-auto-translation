@@ -73,6 +73,7 @@ $ i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
 | --dirPath [filePath or dirPath required]  | -d    | Path to a directory in which you will recursively find all JSON files named [from].json (e.g. en.json) | /               |
 | --from                                    | -f    | From which language you want to translate.                                                             | en              |
 | --to [required]                           | -t    | To which language you want to translate.                                                               | /               |
+| --override                                | -o    | Override all created i18n JSON files.                                                                  | false           |
 
 ## Demo
 

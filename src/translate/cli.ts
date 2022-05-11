@@ -9,6 +9,7 @@ interface Arguments {
   dirPath?: string;
   from: string;
   to: string;
+  override: boolean;
 }
 
 export const argv: Arguments = yargs(process.argv.slice(2))
@@ -63,6 +64,12 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       alias: 't',
       demandOption: true,
       description: 'To which language you want to translate.',
+    },
+    override: {
+      type: 'boolean',
+      alias: 'o',
+      description: 'Override all created i18n JSON files.',
+      default: false,
     },
   })
   .parseSync();

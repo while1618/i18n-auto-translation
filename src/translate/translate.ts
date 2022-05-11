@@ -38,8 +38,9 @@ export abstract class Translate {
         filePath.substring(0, filePath.lastIndexOf('/')),
         `${argv.to}.json`
       );
-      if (fs.existsSync(saveTo)) this.translationAlreadyExists(fileForTranslation, saveTo);
-      else this.translationDoesNotExists(fileForTranslation, saveTo);
+      if (argv.override || !fs.existsSync(saveTo))
+        this.translationDoesNotExists(fileForTranslation, saveTo);
+      else this.translationAlreadyExists(fileForTranslation, saveTo);
     } catch (e) {
       console.log(`${(e as Error).message} at: ${filePath}`);
     }
