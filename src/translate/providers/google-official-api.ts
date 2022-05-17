@@ -26,8 +26,8 @@ export class GoogleOfficialAPI extends Translate {
       })
       .catch((error) => {
         const err = error as ErrorResponse;
+        console.error(`Request error for file: ${saveTo}`);
         if (err.response?.statusCode && err.response.statusMessage && err.errors[0].message) {
-          console.error('Google Translate API Request Error!');
           console.log(`Status Code: ${err.response.statusCode}`);
           console.log(`Status Text: ${err.response.statusMessage}`);
           console.log(`Data: ${JSON.stringify(err.errors[0].message)}`);

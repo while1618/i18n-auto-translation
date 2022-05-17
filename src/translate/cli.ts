@@ -4,7 +4,7 @@ interface Arguments {
   [x: string]: unknown;
   apiProvider: string;
   key: string;
-  location: string;
+  region: string;
   filePath?: string;
   dirPath?: string;
   from: string;
@@ -36,10 +36,10 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       demandOption: true,
       description: 'Subscription key for the API provider.',
     },
-    location: {
+    region: {
       type: 'string',
-      alias: 'l',
-      description: 'Your region. Used only by the Official Azure API.',
+      alias: 'r',
+      description: 'Key region. Used only by the Official Azure API.',
       default: 'global',
     },
     filePath: {

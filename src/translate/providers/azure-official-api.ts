@@ -10,7 +10,7 @@ export class AzureOfficialAPI extends Translate {
   private static readonly axiosConfig: AxiosRequestConfig = {
     headers: {
       'Ocp-Apim-Subscription-Key': argv.key,
-      'Ocp-Apim-Subscription-Region': argv.location,
+      'Ocp-Apim-Subscription-Region': argv.region,
       'Content-type': 'application/json',
       'X-ClientTraceId': uuid(),
     },
@@ -37,6 +37,6 @@ export class AzureOfficialAPI extends Translate {
         const value = (response as AzureTranslateResponse).data[0].translations[0].text;
         this.saveTranslation(decode(value), originalObject, saveTo);
       })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'Azure Official API'));
+      .catch((error) => this.printAxiosError(error as AxiosError, saveTo));
   };
 }

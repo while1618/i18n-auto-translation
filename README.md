@@ -68,7 +68,7 @@ $ i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
 | --version                                 | /     | Current version.                                                                                       | /               |
 | --apiProvider                             | -a    | API Provider.                                                                                          | google-official |
 | --key [required]                          | -k    | Subscription key for the API provider.                                                                 | /               |
-| --location                                | -l    | Your region. Used only by the Official Azure API.                                                      | global          |
+| --region                                  | -r    | Key region. Used only by the Official Azure API.                                                       | global          |
 | --filePath [filePath or dirPath required] | -p    | Path to a single JSON file.                                                                            | /               |
 | --dirPath [filePath or dirPath required]  | -d    | Path to a directory in which you will recursively find all JSON files named [from].json (e.g. en.json) | /               |
 | --from                                    | -f    | From which language you want to translate.                                                             | en              |

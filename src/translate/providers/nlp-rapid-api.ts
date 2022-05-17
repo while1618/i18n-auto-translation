@@ -34,6 +34,6 @@ export class NLPRapidAPI extends Translate {
         const value = (response as NLPTranslateResponse).data.translated_text[argv.to];
         this.saveTranslation(decode(value), originalObject, saveTo);
       })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'NLP Rapid API'));
+      .catch((error) => this.printAxiosError(error as AxiosError, saveTo));
   };
 }

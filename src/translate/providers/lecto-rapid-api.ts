@@ -34,6 +34,6 @@ export class LectoRapidAPI extends Translate {
         const value = (response as LectoTranslateResponse).data.translations[0].translated[0];
         this.saveTranslation(decode(value), originalObject, saveTo);
       })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'Lecto Rapid API'));
+      .catch((error) => this.printAxiosError(error as AxiosError, saveTo));
   };
 }

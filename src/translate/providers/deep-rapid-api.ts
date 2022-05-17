@@ -34,6 +34,6 @@ export class DeepRapidAPI extends Translate {
         const value = (response as DeepTranslateResponse).data.data.translations.translatedText;
         this.saveTranslation(decode(value), originalObject, saveTo);
       })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'Deep Rapid API'));
+      .catch((error) => this.printAxiosError(error as AxiosError, saveTo));
   };
 }

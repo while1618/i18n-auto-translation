@@ -37,6 +37,6 @@ export class AzureRapidAPI extends Translate {
         const value = (response as AzureTranslateResponse).data[0].translations[0].text;
         this.saveTranslation(decode(value), originalObject, saveTo);
       })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'Azure Rapid API'));
+      .catch((error) => this.printAxiosError(error as AxiosError, saveTo));
   };
 }

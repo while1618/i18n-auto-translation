@@ -35,6 +35,6 @@ export class LingvanexRapidAPI extends Translate {
         const value = (response as LingvanexTranslateResponse).data.result;
         this.saveTranslation(decode(value), originalObject, saveTo);
       })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'Linganex Rapid API'));
+      .catch((error) => this.printAxiosError(error as AxiosError, saveTo));
   };
 }

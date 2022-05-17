@@ -29,6 +29,6 @@ export class JustRapidAPI extends Translate {
         const value = (response as JustTranslateResponse).data.text[0];
         this.saveTranslation(decode(value), originalObject, saveTo);
       })
-      .catch((error) => this.printAxiosError(error as AxiosError, 'Just Rapid API'));
+      .catch((error) => this.printAxiosError(error as AxiosError, saveTo));
   };
 }

@@ -8,7 +8,7 @@ import { argv } from './cli';
 import { JSONObj } from './payload';
 
 export abstract class Translate {
-  protected static readonly sentenceDelimiter: string = ' {|} ';
+  protected static readonly sentenceDelimiter: string = '\n{|}\n';
 
   public translate = (): void => {
     if (argv.filePath && argv.dirPath)
@@ -116,8 +116,8 @@ export abstract class Translate {
     saveTo: string
   ) => void;
 
-  protected printAxiosError = (error: AxiosError, api: string): void => {
-    console.error(`${api} Request Error!`);
+  protected printAxiosError = (error: AxiosError, saveTo: string): void => {
+    console.error(`Request error for file: ${saveTo}`);
     if (error.response?.status && error.response.statusText && error.response.data) {
       console.log(`Status Code: ${error.response?.status}`);
       console.log(`Status Text: ${error.response?.statusText}`);
@@ -133,7 +133,7 @@ export abstract class Translate {
       originalObject
     );
     let message: string = `File saved: ${saveTo}`;
-    if (fs.existsSync(saveTo)) {
+    if (fs.existsSync(saveTo) && !argv.override) {
       const existingTranslation = JSON.parse(fs.readFileSync(saveTo, 'utf-8')) as JSONObj;
       content = extend(true, existingTranslation, content) as JSONObj;
       message = `File updated: ${saveTo}`;
@@ -149,7 +149,7 @@ export abstract class Translate {
       Object.keys(json).forEach((key: string) => {
         if (typeof json[key] === 'object') addTranslations(json[key] as JSONObj);
         // eslint-disable-next-line no-param-reassign
-        else json[key] = translations[index++]?.trimStart();
+        else json[key] = translations[index++]?.trim();
       });
     })(translatedObject);
 
