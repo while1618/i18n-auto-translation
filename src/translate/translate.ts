@@ -117,7 +117,8 @@ export abstract class Translate {
   ) => void;
 
   protected printAxiosError = (error: AxiosError, saveTo: string): void => {
-    console.error(`Request error for file: ${saveTo}`);
+    const errorFilePath = saveTo.replace(`${argv.to}.json`, `${argv.from}.json`);
+    console.error(`Request error for file: ${errorFilePath}`);
     if (error.response?.status && error.response.statusText && error.response.data) {
       console.log(`Status Code: ${error.response?.status}`);
       console.log(`Status Text: ${error.response?.statusText}`);
