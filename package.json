@@ -12,7 +12,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc -p .",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "check-updates": "npx npm-check-updates"
   },
