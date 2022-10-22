@@ -34,7 +34,7 @@
     "html-entities": "2.3.3",
     "just-extend": "6.0.1",
     "uuid": "8.3.2",
-    "yargs": "17.5.1"
+    "yargs": "17.6.0"
   },
   "devDependencies": {
     "@types/glob": "7.2.0",
