@@ -39,7 +39,7 @@
   "devDependencies": {
     "@types/glob": "8.0.0",
     "@types/jest": "29.2.0",
-    "@types/node": "18.11.7",
+    "@types/node": "18.11.8",
     "@types/uuid": "8.3.4",
     "@types/yargs": "17.0.13",
     "@typescript-eslint/eslint-plugin": "5.41.0",
