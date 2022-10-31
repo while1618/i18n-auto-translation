@@ -1,5 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import fs from 'fs';
 import { decode, encode } from 'html-entities';
+import https from 'https';
+import { exit } from 'process';
 import { v4 as uuid } from 'uuid';
 import { argv } from '../cli';
 import { AzureTranslateResponse, JSONObj } from '../payload';
@@ -21,6 +24,20 @@ export class AzureOfficialAPI extends Translate {
     },
     responseType: 'json',
   };
+
+  constructor() {
+    super();
+    if (argv.certificatePath) {
+      try {
+        AzureOfficialAPI.axiosConfig.httpsAgent = new https.Agent({
+          ca: fs.readFileSync(argv.certificatePath),
+        });
+      } catch (e) {
+        console.log(`Certificate not fount at: ${argv.certificatePath}`);
+        exit(1);
+      }
+    }
+  }
 
   protected callTranslateAPI = (
     valuesForTranslation: string[],

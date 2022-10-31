@@ -1,5 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import fs from 'fs';
 import { decode, encode } from 'html-entities';
+import https from 'https';
+import { exit } from 'process';
 import { argv } from '../cli';
 import { JSONObj, NLPTranslateResponse } from '../payload';
 import { Translate } from '../translate';
@@ -14,6 +17,20 @@ export class NLPRapidAPI extends Translate {
     },
     responseType: 'json',
   };
+
+  constructor() {
+    super();
+    if (argv.certificatePath) {
+      try {
+        NLPRapidAPI.axiosConfig.httpsAgent = new https.Agent({
+          ca: fs.readFileSync(argv.certificatePath),
+        });
+      } catch (e) {
+        console.log(`Certificate not fount at: ${argv.certificatePath}`);
+        exit(1);
+      }
+    }
+  }
 
   protected callTranslateAPI = (
     valuesForTranslation: string[],

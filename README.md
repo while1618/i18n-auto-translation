@@ -74,6 +74,7 @@ $ i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
 | --from                                    | -f    | From which language you want to translate.                                                             | en              |
 | --to [required]                           | -t    | To which language you want to translate.                                                               | /               |
 | --override                                | -o    | Override all created i18n JSON files.                                                                  | false           |
+| --certificatePath                         | -c    | Path to a custom certificate.                                                                          | /               |
 
 ## Demo
 

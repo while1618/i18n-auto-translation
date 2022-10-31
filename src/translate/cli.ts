@@ -10,6 +10,7 @@ interface Arguments {
   from: string;
   to: string;
   override: boolean;
+  certificatePath?: string;
 }
 
 export const argv: Arguments = yargs(process.argv.slice(2))
@@ -70,6 +71,11 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       alias: 'o',
       description: 'Override all created i18n JSON files.',
       default: false,
+    },
+    certificatePath: {
+      type: 'string',
+      alias: 'c',
+      description: 'Path to a custom certificate.',
     },
   })
   .parseSync();
