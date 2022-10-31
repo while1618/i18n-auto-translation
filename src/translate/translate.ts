@@ -132,7 +132,10 @@ export abstract class Translate {
     // replaceAll() is used because of weird bug that sometimes happens
     // when translate api return delimiter with space in between
     let content: JSONObj = this.createTranslatedObject(
-      value.replaceAll('{ |}', '{|}').split(Translate.sentenceDelimiter.trim()),
+      value
+        .replaceAll('{| }', '{|}')
+        .replaceAll('{ |}', '{|}')
+        .split(Translate.sentenceDelimiter.trim()),
       originalObject
     );
     let message: string = `File saved: ${saveTo}`;
