@@ -1,11 +1,9 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import fs from 'fs';
 import { decode, encode } from 'html-entities';
-import https from 'https';
-import { exit } from 'process';
 import { argv } from '../cli';
 import { JSONObj, JustTranslateResponse } from '../payload';
 import { Translate } from '../translate';
+import { addCustomCert } from '../util';
 
 export class JustRapidAPI extends Translate {
   private static readonly endpoint: string = 'just-translated.p.rapidapi.com';
@@ -19,16 +17,7 @@ export class JustRapidAPI extends Translate {
 
   constructor() {
     super();
-    if (argv.certificatePath) {
-      try {
-        JustRapidAPI.axiosConfig.httpsAgent = new https.Agent({
-          ca: fs.readFileSync(argv.certificatePath),
-        });
-      } catch (e) {
-        console.log(`Certificate not fount at: ${argv.certificatePath}`);
-        exit(1);
-      }
-    }
+    if (argv.certificatePath) addCustomCert(argv.certificatePath);
   }
 
   protected callTranslateAPI = (

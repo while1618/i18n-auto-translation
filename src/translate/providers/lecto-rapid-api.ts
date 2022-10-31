@@ -1,11 +1,9 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import fs from 'fs';
 import { decode, encode } from 'html-entities';
-import https from 'https';
-import { exit } from 'process';
 import { argv } from '../cli';
 import { JSONObj, LectoTranslateResponse } from '../payload';
 import { Translate } from '../translate';
+import { addCustomCert } from '../util';
 
 export class LectoRapidAPI extends Translate {
   private static readonly endpoint: string = 'lecto-translation.p.rapidapi.com';
@@ -20,16 +18,7 @@ export class LectoRapidAPI extends Translate {
 
   constructor() {
     super();
-    if (argv.certificatePath) {
-      try {
-        LectoRapidAPI.axiosConfig.httpsAgent = new https.Agent({
-          ca: fs.readFileSync(argv.certificatePath),
-        });
-      } catch (e) {
-        console.log(`Certificate not fount at: ${argv.certificatePath}`);
-        exit(1);
-      }
-    }
+    if (argv.certificatePath) addCustomCert(argv.certificatePath);
   }
 
   protected callTranslateAPI = (

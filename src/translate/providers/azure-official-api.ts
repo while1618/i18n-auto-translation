@@ -1,12 +1,10 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import fs from 'fs';
 import { decode, encode } from 'html-entities';
-import https from 'https';
-import { exit } from 'process';
 import { v4 as uuid } from 'uuid';
 import { argv } from '../cli';
 import { AzureTranslateResponse, JSONObj } from '../payload';
 import { Translate } from '../translate';
+import { addCustomCert } from '../util';
 
 export class AzureOfficialAPI extends Translate {
   private static readonly endpoint: string = 'api.cognitive.microsofttranslator.com';
@@ -27,16 +25,7 @@ export class AzureOfficialAPI extends Translate {
 
   constructor() {
     super();
-    if (argv.certificatePath) {
-      try {
-        AzureOfficialAPI.axiosConfig.httpsAgent = new https.Agent({
-          ca: fs.readFileSync(argv.certificatePath),
-        });
-      } catch (e) {
-        console.log(`Certificate not fount at: ${argv.certificatePath}`);
-        exit(1);
-      }
-    }
+    if (argv.certificatePath) addCustomCert(argv.certificatePath);
   }
 
   protected callTranslateAPI = (
