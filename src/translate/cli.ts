@@ -24,7 +24,6 @@ export const argv: Arguments = yargs(process.argv.slice(2))
         'azure-official',
         'azure-rapid',
         'deep-rapid',
-        'just-rapid',
         'lecto-rapid',
         'lingvanex-rapid',
         'nlp-rapid',

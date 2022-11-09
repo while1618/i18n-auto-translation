@@ -12,10 +12,6 @@ export interface DeepTranslateResponse {
   data: { data: { translations: { translatedText: string } } };
 }
 
-export interface JustTranslateResponse {
-  data: { text: string[] };
-}
-
 export interface LectoTranslateResponse {
   data: { translations: [{ translated: string[] }] };
 }
