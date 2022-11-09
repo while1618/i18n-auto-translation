@@ -18,7 +18,8 @@ export class DeepRapidAPI extends Translate {
 
   constructor() {
     super();
-    if (argv.certificatePath) addCustomCert(argv.certificatePath);
+    if (argv.certificatePath)
+      DeepRapidAPI.axiosConfig.httpsAgent = addCustomCert(argv.certificatePath);
   }
 
   protected callTranslateAPI = (

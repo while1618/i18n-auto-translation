@@ -18,7 +18,8 @@ export class NLPRapidAPI extends Translate {
 
   constructor() {
     super();
-    if (argv.certificatePath) addCustomCert(argv.certificatePath);
+    if (argv.certificatePath)
+      NLPRapidAPI.axiosConfig.httpsAgent = addCustomCert(argv.certificatePath);
   }
 
   protected callTranslateAPI = (

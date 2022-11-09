@@ -25,7 +25,8 @@ export class AzureOfficialAPI extends Translate {
 
   constructor() {
     super();
-    if (argv.certificatePath) addCustomCert(argv.certificatePath);
+    if (argv.certificatePath)
+      AzureOfficialAPI.axiosConfig.httpsAgent = addCustomCert(argv.certificatePath);
   }
 
   protected callTranslateAPI = (

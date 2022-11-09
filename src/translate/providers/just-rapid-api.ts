@@ -7,7 +7,7 @@ import { addCustomCert } from '../util';
 
 export class JustRapidAPI extends Translate {
   private static readonly endpoint: string = 'just-translated.p.rapidapi.com';
-  private static axiosConfig: AxiosRequestConfig = {
+  private static readonly axiosConfig: AxiosRequestConfig = {
     headers: {
       'X-RapidAPI-Host': JustRapidAPI.endpoint,
       'X-RapidAPI-Key': argv.key,
@@ -17,7 +17,8 @@ export class JustRapidAPI extends Translate {
 
   constructor() {
     super();
-    if (argv.certificatePath) addCustomCert(argv.certificatePath);
+    if (argv.certificatePath)
+      JustRapidAPI.axiosConfig.httpsAgent = addCustomCert(argv.certificatePath);
   }
 
   protected callTranslateAPI = (
