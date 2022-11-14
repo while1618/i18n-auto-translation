@@ -27,9 +27,9 @@
     "url": "https://github.com/while1618/i18n-auto-translation.git"
   },
   "dependencies": {
-    "@google-cloud/translate": "7.0.3",
+    "@google-cloud/translate": "7.0.4",
     "axios": "1.1.3",
-    "deep-object-diff": "1.1.7",
+    "deep-object-diff": "1.1.9",
     "glob": "8.0.3",
     "html-entities": "2.3.3",
     "just-extend": "6.1.1",
@@ -38,12 +38,12 @@
   },
   "devDependencies": {
     "@types/glob": "8.0.0",
-    "@types/jest": "29.2.2",
+    "@types/jest": "29.2.3",
     "@types/node": "18.11.9",
     "@types/uuid": "8.3.4",
     "@types/yargs": "17.0.13",
-    "@typescript-eslint/eslint-plugin": "5.42.1",
-    "@typescript-eslint/parser": "5.42.1",
+    "@typescript-eslint/eslint-plugin": "5.43.0",
+    "@typescript-eslint/parser": "5.43.0",
     "eslint": "8.27.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-airbnb-typescript": "17.0.0",
