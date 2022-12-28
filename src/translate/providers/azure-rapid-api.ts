@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import crypto from 'crypto';
 import { decode, encode } from 'html-entities';
-import { v4 as uuid } from 'uuid';
 import { argv } from '../cli';
 import { AzureTranslateResponse, JSONObj } from '../payload';
 import { Translate } from '../translate';
@@ -10,7 +10,7 @@ export class AzureRapidAPI extends Translate {
   private static readonly endpoint: string = 'microsoft-translator-text.p.rapidapi.com';
   private static readonly axiosConfig: AxiosRequestConfig = {
     headers: {
-      'X-ClientTraceId': uuid(),
+      'X-ClientTraceId': crypto.randomUUID(),
       'X-RapidAPI-Host': AzureRapidAPI.endpoint,
       'X-RapidAPI-Key': argv.key,
       'Content-type': 'application/json',

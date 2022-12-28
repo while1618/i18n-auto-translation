@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import crypto from 'crypto';
 import { decode, encode } from 'html-entities';
-import { v4 as uuid } from 'uuid';
 import { argv } from '../cli';
 import { AzureTranslateResponse, JSONObj } from '../payload';
 import { Translate } from '../translate';
@@ -13,7 +13,7 @@ export class AzureOfficialAPI extends Translate {
       'Ocp-Apim-Subscription-Key': argv.key,
       'Ocp-Apim-Subscription-Region': argv.region,
       'Content-type': 'application/json',
-      'X-ClientTraceId': uuid(),
+      'X-ClientTraceId': crypto.randomUUID(),
     },
     params: {
       'api-version': '3.0',

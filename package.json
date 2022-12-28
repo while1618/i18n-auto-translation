@@ -33,14 +33,12 @@
     "glob": "8.0.3",
     "html-entities": "2.3.3",
     "just-extend": "6.1.1",
-    "uuid": "9.0.0",
     "yargs": "17.6.2"
   },
   "devDependencies": {
     "@types/glob": "8.0.0",
     "@types/jest": "29.2.3",
     "@types/node": "18.11.9",
-    "@types/uuid": "8.3.4",
     "@types/yargs": "17.0.13",
     "@typescript-eslint/eslint-plugin": "5.43.0",
     "@typescript-eslint/parser": "5.43.0",
