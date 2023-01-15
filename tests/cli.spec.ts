@@ -1,3 +1,9 @@
+/* eslint-disable import/first */
+process.argv.push('--key=test');
+process.argv.push('--filePath=./tests/i18n/en.json');
+process.argv.push('--dirPath=./tests/i18n/');
+process.argv.push('--to=sr');
+
 import { argv } from '../src/translate/cli';
 
 describe('CLI', () => {

@@ -12,9 +12,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc -p .",
-    "test:cli": "jest ./tests/cli.spec.ts --key='test' --filePath='./tests/i18n/en.json' --dirPath='./tests/i18n/' --to='sr'",
-    "test:translate-supplier": "jest ./tests/translate-supplier.spec.ts --key='test' --filePath='./tests/i18n/en.json' --dirPath='./tests/i18n/' --to='sr'",
-    "test": "npm run test:cli && npm run test:translate-supplier",
+    "test": "jest ./tests/",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "check-updates": "npx npm-check-updates"
   },
