@@ -47,7 +47,7 @@ export abstract class Translate {
     }
   };
 
-  private translationAlreadyExists(fileForTranslation: JSONObj, saveTo: string): void {
+  private translationAlreadyExists = (fileForTranslation: JSONObj, saveTo: string): void => {
     try {
       const existingTranslation = JSON.parse(fs.readFileSync(saveTo, 'utf-8')) as JSONObj;
       this.deleteIfNeeded(fileForTranslation, existingTranslation, saveTo);
@@ -55,7 +55,7 @@ export abstract class Translate {
     } catch (e) {
       console.log(`${(e as Error).message} at: ${saveTo}`);
     }
-  }
+  };
 
   private deleteIfNeeded = (
     fileForTranslation: JSONObj,
@@ -89,14 +89,14 @@ export abstract class Translate {
     this.callTranslateAPI(valuesForTranslation, diffForTranslation, saveTo);
   };
 
-  private translationDoesNotExists(fileForTranslation: JSONObj, saveTo: string): void {
+  private translationDoesNotExists = (fileForTranslation: JSONObj, saveTo: string): void => {
     if (Object.keys(fileForTranslation).length === 0) {
       console.log(`Nothing to translate, file is empty: ${saveTo}`);
       return;
     }
     const valuesForTranslation: string[] = this.getValuesForTranslation(fileForTranslation);
     this.callTranslateAPI(valuesForTranslation, fileForTranslation, saveTo);
-  }
+  };
 
   private getValuesForTranslation = (object: JSONObj): string[] => {
     const values: string[] = [];
