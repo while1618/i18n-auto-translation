@@ -9,7 +9,7 @@ import { JSONObj } from './payload';
 import { replaceAll } from './util';
 
 export abstract class Translate {
-  protected static readonly sentenceDelimiter: string = '\n{|}\n';
+  public static readonly sentenceDelimiter: string = '\n{|}\n';
 
   public translate = (): void => {
     if (argv.filePath && argv.dirPath)
@@ -163,9 +163,11 @@ export abstract class Translate {
   };
 
   private writeToFile = (content: JSONObj, saveTo: string, message: string): void => {
-    fs.writeFile(saveTo, JSON.stringify(content, null, 2), (error) => {
-      if (error) console.log(error.message);
-      else console.log(message);
-    });
+    try {
+      fs.writeFileSync(saveTo, JSON.stringify(content, null, 2));
+      console.log(message);
+    } catch (e) {
+      console.log((e as Error).message);
+    }
   };
 }

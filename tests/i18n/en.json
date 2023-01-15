@@ -1,0 +1,7 @@
+{
+  "example": "Hello, this is an example",
+  "hello": "Hello",
+  "object": {
+    "test": "Hello, this is a test"
+  }
+}
