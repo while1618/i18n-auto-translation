@@ -12,7 +12,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc -p tsconfig.build.json",
-    "test": "jest",
+    "test": "jest --runInBand",
     "test:coverage": "jest --coverage",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "check-updates": "npx npm-check-updates"
