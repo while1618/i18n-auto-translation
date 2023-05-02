@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { addedDiff, deletedDiff } from 'deep-object-diff';
 import fs from 'fs';
-import glob from 'glob';
+import { globSync } from 'glob';
 import extend from 'just-extend';
 import path from 'path';
 import { argv } from './cli';
@@ -24,7 +24,7 @@ export abstract class Translate {
 
   private translateFiles = (dirPath: string): void => {
     console.log('Finding files for translation...');
-    const filePaths: string[] = glob.sync(`${dirPath}/**/${argv.from}.json`, {
+    const filePaths: string[] = globSync(`${dirPath}/**/${argv.from}.json`, {
       ignore: [`${dirPath}/**/node_modules/**`, `${dirPath}/**/dist/**`],
     });
     if (filePaths.length === 0) throw new Error(`0 files found for translation in ${dirPath}`);
