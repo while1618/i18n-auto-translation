@@ -27,6 +27,9 @@
     "type": "git",
     "url": "https://github.com/while1618/i18n-auto-translation.git"
   },
+  "engines": {
+    "node": ">= 14.17"
+  },
   "dependencies": {
     "@google-cloud/translate": "7.2.1",
     "axios": "1.4.0",
