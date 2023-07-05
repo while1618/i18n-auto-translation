@@ -10,6 +10,8 @@ import { replaceAll } from './util';
 
 export abstract class Translate {
   public static readonly sentenceDelimiter: string = '\n{|}\n';
+  public static readonly skipWordRegex: RegExp = /{{([^{}]+)}}/g;
+  private skippedWords: string[] = [];
 
   public translate = (): void => {
     if (argv.filePath && argv.dirPath)
@@ -99,7 +101,7 @@ export abstract class Translate {
   };
 
   private getValuesForTranslation = (object: JSONObj): string[] => {
-    const values: string[] = [];
+    let values: string[] = [];
 
     (function findValues(json: JSONObj): void {
       Object.values(json).forEach((value) => {
@@ -108,8 +110,21 @@ export abstract class Translate {
       });
     })(object);
 
+    values = values.map((value) => this.skipWords(value));
     return values;
   };
+
+  private skipWords(value: string): string {
+    let index = 0;
+    const replacedValue = value.replace(
+      Translate.skipWordRegex,
+      (match: string, variable: string) => {
+        this.skippedWords.push(variable.trim());
+        return `{{${index++}}}`;
+      }
+    );
+    return replacedValue;
+  }
 
   protected abstract callTranslateAPI: (
     valuesForTranslation: string[],
@@ -148,19 +163,29 @@ export abstract class Translate {
   };
 
   private createTranslatedObject = (translations: string[], originalObject: JSONObj): JSONObj => {
+    translations = translations.map((value) => this.returnSkippedWords(value));
     const translatedObject: JSONObj = { ...originalObject };
     let index: number = 0;
 
     (function addTranslations(json: JSONObj): void {
       Object.keys(json).forEach((key: string) => {
         if (typeof json[key] === 'object') addTranslations(json[key] as JSONObj);
-        // eslint-disable-next-line no-param-reassign
         else json[key] = translations[index++]?.trim();
       });
     })(translatedObject);
 
     return translatedObject;
   };
+
+  private returnSkippedWords(value: string): string {
+    let index = 0;
+    const replacedValue = value.replace(
+      Translate.skipWordRegex,
+      () => `{{${this.skippedWords[index++]}}}`
+    );
+    this.skippedWords = [];
+    return replacedValue;
+  }
 
   private writeToFile = (content: JSONObj, saveTo: string, message: string): void => {
     try {

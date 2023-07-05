@@ -29,5 +29,6 @@ module.exports = {
     'no-underscore-dangle': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }],
     'no-plusplus': 'off',
+    'no-param-reassign': 'off',
   },
 };
