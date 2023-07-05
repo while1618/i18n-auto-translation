@@ -23,3 +23,7 @@ export interface LingvanexTranslateResponse {
 export interface NLPTranslateResponse {
   data: { translated_text: { [x: string]: string } };
 }
+
+export interface DeepLTranslateResponse {
+  data: { translations:[{text: string, detected_source_language: string }]};
+}
