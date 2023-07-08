@@ -28,7 +28,7 @@ export const argv: Arguments = yargs(process.argv.slice(2))
         'lingvanex-rapid',
         'nlp-rapid',
         'deepl-free',
-        'deepl-pro'
+        'deepl-pro',
       ],
       default: 'google-official',
     },

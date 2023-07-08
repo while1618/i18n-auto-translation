@@ -25,5 +25,5 @@ export interface NLPTranslateResponse {
 }
 
 export interface DeepLTranslateResponse {
-  data: { translations:[{text: string, detected_source_language: string }]};
+  data: { translations: [{ text: string; detected_source_language: string }] };
 }

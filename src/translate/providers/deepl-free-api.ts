@@ -9,7 +9,7 @@ export class DeepLFreeAPI extends Translate {
   private static readonly endpoint: string = 'api-free.deepl.com';
   private static readonly axiosConfig: AxiosRequestConfig = {
     headers: {
-      'Authorization': `DeepL-Auth-Key ${argv.key}`,
+      Authorization: `DeepL-Auth-Key ${argv.key}`,
       //'Content-type': 'application/x-www-form-urlencoded',
     },
     responseType: 'json',
@@ -18,13 +18,13 @@ export class DeepLFreeAPI extends Translate {
   constructor() {
     super();
     if (argv.certificatePath)
-    DeepLFreeAPI.axiosConfig.httpsAgent = addCustomCert(argv.certificatePath);
+      DeepLFreeAPI.axiosConfig.httpsAgent = addCustomCert(argv.certificatePath);
   }
 
   protected callTranslateAPI = (
     valuesForTranslation: string[],
     originalObject: JSONObj,
-    saveTo: string
+    saveTo: string,
   ): void => {
     axios
       .post(
@@ -35,11 +35,11 @@ export class DeepLFreeAPI extends Translate {
           source_lang: argv.from,
           preserve_formatting: true,
         },
-        DeepLFreeAPI.axiosConfig
+        DeepLFreeAPI.axiosConfig,
       )
       .then((response) => {
         const translations = (response as DeepLTranslateResponse).data.translations;
-        translations.map(t => {
+        translations.map((t) => {
           //there is only one translation, so we could just take the first one
           this.saveTranslation(decode(t.text), originalObject, saveTo);
         });
