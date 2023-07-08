@@ -39,7 +39,7 @@ export abstract class Translate {
       const fileForTranslation = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as JSONObj;
       const saveTo: string = path.join(
         filePath.substring(0, filePath.lastIndexOf('/')),
-        `${argv.to}.json`
+        `${argv.to}.json`,
       );
       if (argv.override || !fs.existsSync(saveTo))
         this.translationDoesNotExists(fileForTranslation, saveTo);
@@ -62,11 +62,11 @@ export abstract class Translate {
   private deleteIfNeeded = (
     fileForTranslation: JSONObj,
     existingTranslation: JSONObj,
-    saveTo: string
+    saveTo: string,
   ): void => {
     const diffForDeletion: JSONObj = deletedDiff(
       existingTranslation,
-      fileForTranslation
+      fileForTranslation,
     ) as JSONObj;
     if (Object.keys(diffForDeletion).length !== 0) {
       const content = extend(true, existingTranslation, diffForDeletion) as JSONObj;
@@ -77,11 +77,11 @@ export abstract class Translate {
   private translateIfNeeded = (
     fileForTranslation: JSONObj,
     existingTranslation: JSONObj,
-    saveTo: string
+    saveTo: string,
   ): void => {
     const diffForTranslation: JSONObj = addedDiff(
       existingTranslation,
-      fileForTranslation
+      fileForTranslation,
     ) as JSONObj;
     if (Object.keys(diffForTranslation).length === 0) {
       console.log(`Everything already translated for: ${saveTo}`);
@@ -115,13 +115,12 @@ export abstract class Translate {
   };
 
   private skipWords(value: string): string {
-    let index = 0;
     const replacedValue = value.replace(
       Translate.skipWordRegex,
       (match: string, variable: string) => {
         this.skippedWords.push(variable.trim());
-        return `{{${index++}}}`;
-      }
+        return `{{${this.skippedWords.length - 1}}}`;
+      },
     );
     return replacedValue;
   }
@@ -129,7 +128,7 @@ export abstract class Translate {
   protected abstract callTranslateAPI: (
     valuesForTranslation: string[],
     originalObject: JSONObj,
-    saveTo: string
+    saveTo: string,
   ) => void;
 
   protected printAxiosError = (error: AxiosError, saveTo: string): void => {
@@ -151,7 +150,7 @@ export abstract class Translate {
     translations = replaceAll(translations, '{ |}', '{|}');
     let content: JSONObj = this.createTranslatedObject(
       translations.split(Translate.sentenceDelimiter.trim()),
-      originalObject
+      originalObject,
     );
     let message: string = `File saved: ${saveTo}`;
     if (fs.existsSync(saveTo) && !argv.override) {
@@ -178,13 +177,7 @@ export abstract class Translate {
   };
 
   private returnSkippedWords(value: string): string {
-    let index = 0;
-    const replacedValue = value.replace(
-      Translate.skipWordRegex,
-      () => `{{${this.skippedWords[index++]}}}`
-    );
-    this.skippedWords = [];
-    return replacedValue;
+    return value.replace(Translate.skipWordRegex, () => `{{${this.skippedWords.shift()}}}`);
   }
 
   private writeToFile = (content: JSONObj, saveTo: string, message: string): void => {
