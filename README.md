@@ -18,7 +18,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/i18n-auto-translation" alt="NPM Version">
-    <img src="https://img.shields.io/badge/npm-v1.2.6-blue" />
+    <img src="https://img.shields.io/badge/npm-v1.2.7-blue" />
   </a>
   <a href="LICENSE" alt="License">
     <img src="https://img.shields.io/github/license/while1618/i18n-auto-translation" />
@@ -82,15 +82,16 @@ https://user-images.githubusercontent.com/49982438/158603886-23c9978b-56e0-4f50-
 
 ## Translate Providers
 
-| Provider                                                                                                                          | CLI usage       |
-| --------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| [Google Translate Official](https://cloud.google.com/translate/)                                                                  | google-official |
-| [Azure Translator Official](https://azure.microsoft.com/en-us/services/cognitive-services/translator/)                            | azure-official  |
-| [Azure Translator RapidAPI](https://rapidapi.com/microsoft-azure-org-microsoft-cognitive-services/api/microsoft-translator-text/) | azure-rapid     |
-| [Deep Translate RapidAPI](https://rapidapi.com/gatzuma/api/deep-translate1/)                                                      | deep-rapid      |
-| [Lecto Translation RapidAPI](https://rapidapi.com/lecto-lecto-default/api/lecto-translation/)                                     | lecto-rapid     |
-| [Lingvanex Translate RapidAPI](https://rapidapi.com/Lingvanex/api/lingvanex-translate/)                                           | lingvanex-rapid |
-| [NLP Translation RapidAPI](https://rapidapi.com/gofitech/api/nlp-translation/)                                                    | nlp-rapid       |
+| Provider                                                                                                                          | CLI usage              |
+| --------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| [Google Translate Official](https://cloud.google.com/translate/)                                                                  | google-official        |
+| [Azure Translator Official](https://azure.microsoft.com/en-us/services/cognitive-services/translator/)                            | azure-official         |
+| [Azure Translator RapidAPI](https://rapidapi.com/microsoft-azure-org-microsoft-cognitive-services/api/microsoft-translator-text/) | azure-rapid            |
+| [Deep Translate RapidAPI](https://rapidapi.com/gatzuma/api/deep-translate1/)                                                      | deep-rapid             |
+| [Lecto Translation RapidAPI](https://rapidapi.com/lecto-lecto-default/api/lecto-translation/)                                     | lecto-rapid            |
+| [Lingvanex Translate RapidAPI](https://rapidapi.com/Lingvanex/api/lingvanex-translate/)                                           | lingvanex-rapid        |
+| [NLP Translation RapidAPI](https://rapidapi.com/gofitech/api/nlp-translation/)                                                    | nlp-rapid              |
+| [Deepl](https://www.deepl.com/pro-api?cta=header-pro-api)                                                                         | deepl-pro / deepl-free |
 
 ### Obtaining keys
 
