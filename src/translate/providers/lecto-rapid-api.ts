@@ -25,7 +25,7 @@ export class LectoRapidAPI extends Translate {
   protected callTranslateAPI = (
     valuesForTranslation: string[],
     originalObject: JSONObj,
-    saveTo: string
+    saveTo: string,
   ): void => {
     axios
       .post(
@@ -35,7 +35,7 @@ export class LectoRapidAPI extends Translate {
           to: [argv.to],
           from: argv.from,
         },
-        LectoRapidAPI.axiosConfig
+        LectoRapidAPI.axiosConfig,
       )
       .then((response) => {
         const value = (response as LectoTranslateResponse).data.translations[0].translated[0];

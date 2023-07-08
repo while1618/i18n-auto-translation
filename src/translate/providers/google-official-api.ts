@@ -13,7 +13,7 @@ export class GoogleOfficialAPI extends Translate {
   protected callTranslateAPI = (
     valuesForTranslation: string[],
     originalObject: JSONObj,
-    saveTo: string
+    saveTo: string,
   ): void => {
     new GoogleTranslate({ key: argv.key })
       .translate(encode(valuesForTranslation.join(Translate.sentenceDelimiter)), {

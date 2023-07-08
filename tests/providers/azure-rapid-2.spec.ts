@@ -45,8 +45,8 @@ describe('AzureRapid Provider', () => {
           },
         },
         null,
-        2
-      )
+        2,
+      ),
     );
   });
 

@@ -1,4 +1,3 @@
-
 <h1 align="center">
   <br>
   i18n-auto-translation
@@ -38,8 +37,8 @@ i18n-auto-translation helps you translate your JSON internationalization files. 
 - If the translation for the file already exists, the tool will only translate newly added lines, or delete the one that are no longer in the original file, keeping the structure same as the original file.
 - Don't worry, tool will call an API only for the newly created lines, already translated one will be skipped.
 - Translate APIs are not ideal, and that's why you will need from time to time to override some translations manually, when you manually translate some value, the tool will keep that value, and won't try to translate it again.
-- If you pass a directory, the tool will recursively find all files named [from].json (e.g. en.json), and the translations will be saved in the same directory as the original file(s). All the described above will be still applicable. 
-- Words that are wrapped in ```{{}}``` won't be translated.
+- If you pass a directory, the tool will recursively find all files named [from].json (e.g. en.json), and the translations will be saved in the same directory as the original file(s). All the described above will be still applicable.
+- Words that are wrapped in `{{}}` won't be translated.
 
 ## Installation
 

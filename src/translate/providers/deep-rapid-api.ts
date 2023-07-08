@@ -25,7 +25,7 @@ export class DeepRapidAPI extends Translate {
   protected callTranslateAPI = (
     valuesForTranslation: string[],
     originalObject: JSONObj,
-    saveTo: string
+    saveTo: string,
   ): void => {
     axios
       .post(
@@ -35,7 +35,7 @@ export class DeepRapidAPI extends Translate {
           source: argv.from,
           target: argv.to,
         },
-        DeepRapidAPI.axiosConfig
+        DeepRapidAPI.axiosConfig,
       )
       .then((response) => {
         const value = (response as DeepTranslateResponse).data.data.translations.translatedText;

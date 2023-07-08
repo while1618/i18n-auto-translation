@@ -25,7 +25,7 @@ export class LingvanexRapidAPI extends Translate {
   protected callTranslateAPI = (
     valuesForTranslation: string[],
     originalObject: JSONObj,
-    saveTo: string
+    saveTo: string,
   ): void => {
     axios
       .post(
@@ -36,7 +36,7 @@ export class LingvanexRapidAPI extends Translate {
           from: argv.from,
           platform: 'api',
         },
-        LingvanexRapidAPI.axiosConfig
+        LingvanexRapidAPI.axiosConfig,
       )
       .then((response) => {
         const value = (response as LingvanexTranslateResponse).data.result;

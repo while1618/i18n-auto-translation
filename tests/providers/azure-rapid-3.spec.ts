@@ -29,8 +29,8 @@ describe('AzureRapid Provider', () => {
           },
         },
         null,
-        2
-      )
+        2,
+      ),
     );
   });
 
@@ -48,7 +48,7 @@ describe('AzureRapid Provider', () => {
     new AzureRapidAPI().translate();
 
     expect(
-      mockedAxios.post.mockResolvedValue({ data: translations } as AzureTranslateResponse)
+      mockedAxios.post.mockResolvedValue({ data: translations } as AzureTranslateResponse),
     ).toBeCalledTimes(2);
   });
 });

@@ -27,8 +27,8 @@ describe('AzureRapid Provider', () => {
           },
         },
         null,
-        2
-      )
+        2,
+      ),
     );
   });
 
@@ -58,8 +58,8 @@ describe('AzureRapid Provider', () => {
           new: 'Novo',
         },
         null,
-        2
-      )
+        2,
+      ),
     );
   });
 });

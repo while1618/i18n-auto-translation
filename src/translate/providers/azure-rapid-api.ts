@@ -32,13 +32,13 @@ export class AzureRapidAPI extends Translate {
   protected callTranslateAPI = (
     valuesForTranslation: string[],
     originalObject: JSONObj,
-    saveTo: string
+    saveTo: string,
   ): void => {
     axios
       .post(
         `https://${AzureRapidAPI.endpoint}/translate`,
         [{ text: encode(valuesForTranslation.join(Translate.sentenceDelimiter)) }],
-        AzureRapidAPI.axiosConfig
+        AzureRapidAPI.axiosConfig,
       )
       .then((response) => {
         const value = (response as AzureTranslateResponse).data[0].translations[0].text;

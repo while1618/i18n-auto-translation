@@ -25,7 +25,7 @@ export class NLPRapidAPI extends Translate {
   protected callTranslateAPI = (
     valuesForTranslation: string[],
     originalObject: JSONObj,
-    saveTo: string
+    saveTo: string,
   ): void => {
     axios
       .post(
@@ -35,7 +35,7 @@ export class NLPRapidAPI extends Translate {
           to: argv.to,
           from: argv.from,
         },
-        NLPRapidAPI.axiosConfig
+        NLPRapidAPI.axiosConfig,
       )
       .then((response) => {
         const value = (response as NLPTranslateResponse).data.translated_text[argv.to];
