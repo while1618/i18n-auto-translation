@@ -10,7 +10,7 @@ import { replaceAll } from './util';
 
 export abstract class Translate {
   public static readonly sentenceDelimiter: string = '\n{|}\n';
-  public static readonly skipWordRegex: RegExp = /{{([^{}]+)}}/g;
+  public static readonly skipWordRegex: RegExp = /({{([^{}]+)}}|<([^<>]+)>|<\/([^<>]+)>)/g;
   private skippedWords: string[] = [];
 
   public translate = (): void => {
@@ -115,14 +115,10 @@ export abstract class Translate {
   };
 
   private skipWords(value: string): string {
-    const replacedValue = value.replace(
-      Translate.skipWordRegex,
-      (match: string, variable: string) => {
-        this.skippedWords.push(variable.trim());
-        return `{{${this.skippedWords.length - 1}}}`;
-      },
-    );
-    return replacedValue;
+    return value.replace(Translate.skipWordRegex, (match: string) => {
+      this.skippedWords.push(match.trim());
+      return `{{${this.skippedWords.length - 1}}}`;
+    });
   }
 
   protected abstract callTranslateAPI: (
@@ -177,7 +173,7 @@ export abstract class Translate {
   };
 
   private returnSkippedWords(value: string): string {
-    return value.replace(Translate.skipWordRegex, () => `{{${this.skippedWords.shift()}}}`);
+    return value.replace(Translate.skipWordRegex, () => `${this.skippedWords.shift()}`);
   }
 
   private writeToFile = (content: JSONObj, saveTo: string, message: string): void => {
