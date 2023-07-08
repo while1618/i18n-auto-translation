@@ -18,7 +18,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/i18n-auto-translation" alt="NPM Version">
-    <img src="https://img.shields.io/badge/npm-v1.2.7-blue" />
+    <img src="https://img.shields.io/badge/npm-v1.2.8-blue" />
   </a>
   <a href="LICENSE" alt="License">
     <img src="https://img.shields.io/github/license/while1618/i18n-auto-translation" />
@@ -38,7 +38,7 @@ i18n-auto-translation helps you translate your JSON internationalization files. 
 - Don't worry, tool will call an API only for the newly created lines, already translated one will be skipped.
 - Translate APIs are not ideal, and that's why you will need from time to time to override some translations manually, when you manually translate some value, the tool will keep that value, and won't try to translate it again.
 - If you pass a directory, the tool will recursively find all files named [from].json (e.g. en.json), and the translations will be saved in the same directory as the original file(s). All the described above will be still applicable.
-- Words that are wrapped in `{{}}` won't be translated.
+- Words that are wrapped in `{{}}`, `<>`, `</>` won't be translated. e.g. `{{skip}} <strong> </strong> <br />`
 
 ## Installation
 
