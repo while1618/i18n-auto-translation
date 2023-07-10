@@ -10,7 +10,8 @@ import { replaceAll } from './util';
 
 export abstract class Translate {
   public static readonly sentenceDelimiter: string = '\n{|}\n';
-  public static readonly skipWordRegex: RegExp = /({{([^{}]+)}}|<([^<>]+)>|<\/([^<>]+)>)/g;
+  public static readonly skipWordRegex: RegExp =
+    /({{([^{}]+)}}|<([^<>]+)>|<\/([^<>]+)>|\{([^{}]+)\})/g;
   private skippedWords: string[] = [];
 
   public translate = (): void => {
