@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { decode, encode } from 'html-entities';
 import { argv } from '../cli';
-import { JSONObj, DeepLTranslateResponse } from '../payload';
+import { DeepLTranslateResponse, JSONObj } from '../payload';
 import { Translate } from '../translate';
 import { addCustomCert } from '../util';
 
