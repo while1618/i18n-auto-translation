@@ -10,7 +10,6 @@ export class DeepLProAPI extends Translate {
   private static readonly axiosConfig: AxiosRequestConfig = {
     headers: {
       Authorization: `DeepL-Auth-Key ${argv.key}`,
-      //'Content-type': 'application/x-www-form-urlencoded',
     },
     responseType: 'json',
   };
@@ -38,11 +37,8 @@ export class DeepLProAPI extends Translate {
         DeepLProAPI.axiosConfig,
       )
       .then((response) => {
-        const translations = (response as DeepLTranslateResponse).data.translations;
-        translations.map((t) => {
-          //there is only one translation, so we could just take the first one
-          this.saveTranslation(decode(t.text), originalObject, saveTo);
-        });
+        const { translations } = (response as DeepLTranslateResponse).data;
+        this.saveTranslation(decode(translations[0].text), originalObject, saveTo);
       })
       .catch((error) => this.printAxiosError(error as AxiosError, saveTo));
   };
