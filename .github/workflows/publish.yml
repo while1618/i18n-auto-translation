@@ -1,4 +1,4 @@
-name: Deploy to NPM
+name: Publish to NPM
 run-name: ${{ github.actor }} started CI
 
 on:
