@@ -3,7 +3,8 @@ run-name: ${{ github.actor }} started CI
 
 on:
   push:
-    branches: main
+    tags:
+      - '*'
 
 jobs:
   publish:
