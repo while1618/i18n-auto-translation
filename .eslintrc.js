@@ -30,5 +30,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }],
     'no-plusplus': 'off',
     'no-param-reassign': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-unsafe-member-access': 'off',
   },
 };

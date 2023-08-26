@@ -27,3 +27,8 @@ export interface NLPTranslateResponse {
 export interface DeepLTranslateResponse {
   data: { translations: [{ text: string; detected_source_language: string }] };
 }
+
+export type GoogleErrorResponse = {
+  response: { statusCode: number; statusMessage: string };
+  errors: [{ message: string }];
+};
