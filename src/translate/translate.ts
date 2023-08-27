@@ -9,7 +9,7 @@ import { replaceAll } from './util';
 
 export abstract class Translate {
   public static readonly sentenceDelimiter: string = '\n{|}\n';
-  public static readonly skipWordRegex: RegExp =
+  private static readonly skipWordRegex: RegExp =
     /({{([^{}]+)}}|<([^<>]+)>|<\/([^<>]+)>|\{([^{}]+)\})/g;
   private static readonly maxLinesPerRequest = 200;
   private skippedWords: string[] = [];
@@ -124,7 +124,7 @@ export abstract class Translate {
 
   private translateValues = (
     valuesForTranslation: string[],
-    fileForTranslation: JSONObj,
+    originalObject: JSONObj,
     saveTo: string,
   ): void => {
     if (valuesForTranslation.length > Translate.maxLinesPerRequest) {
@@ -139,7 +139,7 @@ export abstract class Translate {
           response.forEach((value) => {
             translated += value + Translate.sentenceDelimiter;
           });
-          this.saveTranslation(translated, fileForTranslation, saveTo);
+          this.saveTranslation(translated, originalObject, saveTo);
         })
         .catch((error) => {
           this.printError(error, saveTo);
@@ -147,7 +147,7 @@ export abstract class Translate {
     } else {
       this.callTranslateAPI(valuesForTranslation)
         .then((response) => {
-          this.saveTranslation(response, fileForTranslation, saveTo);
+          this.saveTranslation(response, originalObject, saveTo);
         })
         .catch((error) => {
           this.printError(error, saveTo);
