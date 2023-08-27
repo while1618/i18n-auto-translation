@@ -1,4 +1,3 @@
-import { AxiosError } from 'axios';
 import { addedDiff, deletedDiff } from 'deep-object-diff';
 import fs from 'fs';
 import { globSync } from 'glob';
@@ -10,8 +9,9 @@ import { replaceAll } from './util';
 
 export abstract class Translate {
   public static readonly sentenceDelimiter: string = '\n{|}\n';
-  public static readonly skipWordRegex: RegExp =
+  private static readonly skipWordRegex: RegExp =
     /({{([^{}]+)}}|<([^<>]+)>|<\/([^<>]+)>|\{([^{}]+)\})/g;
+  private static readonly maxLinesPerRequest = 200;
   private skippedWords: string[] = [];
 
   public translate = (): void => {
@@ -89,7 +89,7 @@ export abstract class Translate {
       return;
     }
     const valuesForTranslation: string[] = this.getValuesForTranslation(diffForTranslation);
-    this.callTranslateAPI(valuesForTranslation, diffForTranslation, saveTo);
+    this.translateValues(valuesForTranslation, diffForTranslation, saveTo);
   };
 
   private translationDoesNotExists = (fileForTranslation: JSONObj, saveTo: string): void => {
@@ -98,7 +98,7 @@ export abstract class Translate {
       return;
     }
     const valuesForTranslation: string[] = this.getValuesForTranslation(fileForTranslation);
-    this.callTranslateAPI(valuesForTranslation, fileForTranslation, saveTo);
+    this.translateValues(valuesForTranslation, fileForTranslation, saveTo);
   };
 
   private getValuesForTranslation = (object: JSONObj): string[] => {
@@ -122,25 +122,63 @@ export abstract class Translate {
     });
   }
 
-  protected abstract callTranslateAPI: (
+  private translateValues = (
     valuesForTranslation: string[],
     originalObject: JSONObj,
     saveTo: string,
-  ) => void;
-
-  protected printAxiosError = (error: AxiosError, saveTo: string): void => {
-    const errorFilePath = saveTo.replace(`${argv.to}.json`, `${argv.from}.json`);
-    console.error(`Request error for file: ${errorFilePath}`);
-    if (error.response?.status && error.response.statusText && error.response.data) {
-      console.log(`Status Code: ${error.response?.status}`);
-      console.log(`Status Text: ${error.response?.statusText}`);
-      console.log(`Data: ${JSON.stringify(error.response?.data)}`);
+  ): void => {
+    if (valuesForTranslation.length > Translate.maxLinesPerRequest) {
+      const splitted = this.splitValuesForTranslation(valuesForTranslation);
+      const promises: Promise<string>[] = [];
+      splitted.forEach((values) => {
+        promises.push(this.callTranslateAPI(values));
+      });
+      Promise.all(promises)
+        .then((response) => {
+          let translated = '';
+          response.forEach((value) => {
+            translated += value + Translate.sentenceDelimiter;
+          });
+          this.saveTranslation(translated, originalObject, saveTo);
+        })
+        .catch((error) => {
+          this.printError(error, saveTo);
+        });
     } else {
-      console.log(error.message);
+      this.callTranslateAPI(valuesForTranslation)
+        .then((response) => {
+          this.saveTranslation(response, originalObject, saveTo);
+        })
+        .catch((error) => {
+          this.printError(error, saveTo);
+        });
     }
   };
 
-  protected saveTranslation = (value: string, originalObject: JSONObj, saveTo: string): void => {
+  private splitValuesForTranslation = (valuesForTranslation: string[]): string[][] => {
+    const resultArrays = [];
+
+    for (let i = 0; i < valuesForTranslation.length; i += Translate.maxLinesPerRequest) {
+      const chunk = valuesForTranslation.slice(i, i + Translate.maxLinesPerRequest);
+      resultArrays.push(chunk);
+    }
+
+    return resultArrays;
+  };
+
+  protected abstract callTranslateAPI: (valuesForTranslation: string[]) => Promise<string>;
+
+  private printError = (error: any, saveTo: string): void => {
+    const errorFilePath = saveTo.replace(`${argv.to}.json`, `${argv.from}.json`);
+    console.error(`Request error for file: ${errorFilePath}`);
+    console.log(`Status Code: ${error?.response?.status ?? error?.response?.statusCode}`);
+    console.log(`Status Text: ${error?.response?.statusText ?? error?.response?.statusMessage}`);
+    console.log(
+      `Data: ${JSON.stringify(error?.response?.data) ?? JSON.stringify(error?.errors[0].message)}`,
+    );
+  };
+
+  private saveTranslation = (value: string, originalObject: JSONObj, saveTo: string): void => {
     // replaceAll() is used because of weird bug that sometimes happens
     // when translate api return delimiter with space in between
     let translations = replaceAll(value, '{| }', '{|}');

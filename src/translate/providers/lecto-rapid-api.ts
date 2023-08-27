@@ -1,7 +1,7 @@
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { decode, encode } from 'html-entities';
 import { argv } from '../cli';
-import { JSONObj, LectoTranslateResponse } from '../payload';
+import { LectoTranslateResponse } from '../payload';
 import { Translate } from '../translate';
 import { addCustomCert } from '../util';
 
@@ -22,25 +22,16 @@ export class LectoRapidAPI extends Translate {
       LectoRapidAPI.axiosConfig.httpsAgent = addCustomCert(argv.certificatePath);
   }
 
-  protected callTranslateAPI = (
-    valuesForTranslation: string[],
-    originalObject: JSONObj,
-    saveTo: string,
-  ): void => {
-    axios
-      .post(
-        `https://${LectoRapidAPI.endpoint}/v1/translate/text`,
-        {
-          texts: [encode(valuesForTranslation.join(Translate.sentenceDelimiter))],
-          to: [argv.to],
-          from: argv.from,
-        },
-        LectoRapidAPI.axiosConfig,
-      )
-      .then((response) => {
-        const value = (response as LectoTranslateResponse).data.translations[0].translated[0];
-        this.saveTranslation(decode(value), originalObject, saveTo);
-      })
-      .catch((error) => this.printAxiosError(error as AxiosError, saveTo));
+  protected callTranslateAPI = async (valuesForTranslation: string[]): Promise<string> => {
+    const response = await axios.post(
+      `https://${LectoRapidAPI.endpoint}/v1/translate/text`,
+      {
+        texts: [encode(valuesForTranslation.join(Translate.sentenceDelimiter))],
+        to: [argv.to],
+        from: argv.from,
+      },
+      LectoRapidAPI.axiosConfig,
+    );
+    return decode((response as LectoTranslateResponse).data.translations[0].translated[0]);
   };
 }
