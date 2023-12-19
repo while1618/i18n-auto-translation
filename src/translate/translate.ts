@@ -8,7 +8,7 @@ import { JSONObj } from './payload';
 import { replaceAll } from './util';
 
 export abstract class Translate {
-  public static readonly sentenceDelimiter: string = '\n{|}\n';
+  public static readonly sentenceDelimiter: string = '\n{~~~}\n';
   private static readonly skipWordRegex: RegExp =
     /({{([^{}]+)}}|<([^<>]+)>|<\/([^<>]+)>|\{([^{}]+)\})/g;
   private static readonly maxLinesPerRequest = 200;
