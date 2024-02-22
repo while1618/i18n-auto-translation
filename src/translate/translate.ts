@@ -217,7 +217,7 @@ export abstract class Translate {
 
   private writeToFile = (content: JSONObj, saveTo: string, message: string): void => {
     try {
-      fs.writeFileSync(saveTo, JSON.stringify(content, null, 2));
+      fs.writeFileSync(saveTo, JSON.stringify(content, null, argv.spaces));
       console.log(message);
     } catch (e) {
       console.log((e as Error).message);

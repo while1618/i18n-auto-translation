@@ -78,6 +78,7 @@ $ i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
 | --to [required]                           | -t    | To which language you want to translate.                                                               | /               |
 | --override                                | -o    | Override all created i18n JSON files.                                                                  | false           |
 | --certificatePath                         | -c    | Path to a custom certificate.                                                                          | /               |
+| --spaces                                  | -s    | Number of spaces to use when generating output JSON files.                                             | 2               |
 
 ## Demo
 

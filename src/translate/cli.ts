@@ -11,6 +11,7 @@ interface Arguments {
   to: string;
   override: boolean;
   certificatePath?: string;
+  spaces: number;
 }
 
 export const argv: Arguments = yargs(process.argv.slice(2))
@@ -77,6 +78,12 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       type: 'string',
       alias: 'c',
       description: 'Path to a custom certificate.',
+    },
+    spaces: {
+      type: 'number',
+      alias: 's',
+      description: 'Number of spaces to use when generating output JSON files.',
+      default: 2,
     },
   })
   .parseSync();
