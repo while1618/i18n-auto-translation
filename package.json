@@ -37,7 +37,7 @@
     "axios": "1.6.7",
     "deep-object-diff": "1.1.9",
     "glob": "10.3.10",
-    "html-entities": "2.4.0",
+    "html-entities": "2.5.2",
     "just-extend": "6.2.0",
     "yargs": "17.7.2"
   },
