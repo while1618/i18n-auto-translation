@@ -1,6 +1,6 @@
 {
   "name": "i18n-auto-translation",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Auto translate i18n JSON file(s) to desired language(s).",
   "main": "dist/index.js",
   "license": "MIT",
@@ -33,22 +33,22 @@
     "node": ">= 14.17"
   },
   "dependencies": {
-    "@google-cloud/translate": "8.1.0",
-    "axios": "1.6.7",
+    "@google-cloud/translate": "8.2.0",
+    "axios": "1.6.8",
     "deep-object-diff": "1.1.9",
-    "glob": "10.3.10",
-    "html-entities": "2.4.0",
+    "glob": "10.3.12",
+    "html-entities": "2.5.2",
     "just-extend": "6.2.0",
     "yargs": "17.7.2"
   },
   "devDependencies": {
     "@types/glob": "8.1.0",
     "@types/jest": "29.5.12",
-    "@types/node": "20.11.20",
+    "@types/node": "20.12.7",
     "@types/yargs": "17.0.32",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
-    "eslint": "8.56.0",
+    "eslint": "8.57.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-airbnb-typescript": "17.1.0",
     "eslint-config-prettier": "9.1.0",
@@ -58,6 +58,6 @@
     "prettier": "3.2.5",
     "ts-jest": "29.1.2",
     "ts-node": "10.9.2",
-    "typescript": "5.3.3"
+    "typescript": "5.4.5"
   }
 }
