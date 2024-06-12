@@ -33,7 +33,7 @@
     "node": ">= 14.17"
   },
   "dependencies": {
-    "@google-cloud/translate": "8.2.0",
+    "@google-cloud/translate": "8.3.0",
     "axios": "1.6.8",
     "deep-object-diff": "1.1.9",
     "glob": "10.3.12",
