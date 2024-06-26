@@ -8,7 +8,7 @@ import { JSONObj } from './payload';
 import { replaceAll } from './util';
 
 export abstract class Translate {
-  public static readonly sentenceDelimiter: string = '\n{~~~}\n';
+  public static readonly sentenceDelimiter: string = '\n#__#\n';
   private static readonly skipWordRegex: RegExp =
     /({{([^{}]+)}}|<([^<>]+)>|<\/([^<>]+)>|\{([^{}]+)\})/g;
   private static readonly maxLinesPerRequest = 200;
@@ -181,8 +181,8 @@ export abstract class Translate {
   private saveTranslation = (value: string, originalObject: JSONObj, saveTo: string): void => {
     // replaceAll() is used because of weird bug that sometimes happens
     // when translate api return delimiter with space in between
-    let translations = replaceAll(value, '{~~~ }', '{~~~}');
-    translations = replaceAll(translations, '{ ~~~}', '{~~~}');
+    let translations = replaceAll(value, '#__ #', '#__#');
+    translations = replaceAll(translations, '# __#', '#__#');
     let content: JSONObj = this.createTranslatedObject(
       translations.split(Translate.sentenceDelimiter.trim()),
       originalObject,
