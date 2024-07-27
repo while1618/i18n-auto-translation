@@ -36,7 +36,7 @@
     "@google-cloud/translate": "8.3.0",
     "axios": "1.7.2",
     "deep-object-diff": "1.1.9",
-    "glob": "10.4.2",
+    "glob": "10.4.3",
     "html-entities": "2.5.2",
     "just-extend": "6.2.0",
     "yargs": "17.7.2"
