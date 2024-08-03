@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 process.argv.push('--key=test');
 process.argv.push('--dirPath=./tests/i18n/');
 process.argv.push('--to=sr');
@@ -49,6 +48,6 @@ describe('AzureRapid Provider', () => {
 
     expect(
       mockedAxios.post.mockResolvedValue({ data: translations } as AzureTranslateResponse),
-    ).toBeCalledTimes(2);
+    ).toHaveBeenCalledTimes(2);
   });
 });

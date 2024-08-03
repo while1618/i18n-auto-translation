@@ -168,6 +168,7 @@ export abstract class Translate {
 
   protected abstract callTranslateAPI: (valuesForTranslation: string[]) => Promise<string>;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private printError = (error: any, saveTo: string): void => {
     const errorFilePath = saveTo.replace(`${argv.to}.json`, `${argv.from}.json`);
     console.error(`Request error for file: ${errorFilePath}`);

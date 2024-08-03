@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 process.argv.push('--key=test');
 process.argv.push('--filePath=./tests/i18n/nested/en.json');
 process.argv.push('--to=sr');
@@ -45,7 +44,6 @@ describe('AzureRapid Provider', () => {
     mockedAxios.post.mockResolvedValue({ data: translations } as AzureTranslateResponse);
     new AzureRapidAPI().translate();
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
     await new Promise(process.nextTick); // wait fot translate method to finish
 
     expect(fs.readFileSync(translatedFilePath, 'utf-8')).toEqual(

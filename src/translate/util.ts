@@ -7,7 +7,7 @@ export const addCustomCert = (certificatePath: string): https.Agent => {
     return new https.Agent({
       ca: fs.readFileSync(certificatePath),
     });
-  } catch (e) {
+  } catch (_) {
     console.log(`Certificate not fount at: ${certificatePath}`);
     return exit(1);
   }

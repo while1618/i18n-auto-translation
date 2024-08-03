@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 process.argv.push('--key=test');
 process.argv.push('--to=sr');
 
