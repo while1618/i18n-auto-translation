@@ -11,7 +11,6 @@ export abstract class Translate {
   public static readonly sentenceDelimiter: string = '\n#__#\n';
   private static readonly skipWordRegex: RegExp =
     /({{([^{}]+)}}|<([^<>]+)>|<\/([^<>]+)>|\{([^{}]+)\})/g;
-  private static readonly maxLinesPerRequest = 200;
   private skippedWords: string[] = [];
 
   public translate = (): void => {
@@ -127,7 +126,7 @@ export abstract class Translate {
     originalObject: JSONObj,
     saveTo: string,
   ): void => {
-    if (valuesForTranslation.length > Translate.maxLinesPerRequest) {
+    if (valuesForTranslation.length > argv.maxLinesPerRequest) {
       const splitted = this.splitValuesForTranslation(valuesForTranslation);
       const promises: Promise<string>[] = [];
       splitted.forEach((values) => {
@@ -158,8 +157,8 @@ export abstract class Translate {
   private splitValuesForTranslation = (valuesForTranslation: string[]): string[][] => {
     const resultArrays = [];
 
-    for (let i = 0; i < valuesForTranslation.length; i += Translate.maxLinesPerRequest) {
-      const chunk = valuesForTranslation.slice(i, i + Translate.maxLinesPerRequest);
+    for (let i = 0; i < valuesForTranslation.length; i += argv.maxLinesPerRequest) {
+      const chunk = valuesForTranslation.slice(i, i + argv.maxLinesPerRequest);
       resultArrays.push(chunk);
     }
 

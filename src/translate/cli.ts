@@ -12,6 +12,7 @@ interface Arguments {
   override: boolean;
   certificatePath?: string;
   spaces: number;
+  maxLinesPerRequest: number;
 }
 
 export const argv: Arguments = yargs(process.argv.slice(2))
@@ -84,6 +85,13 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       alias: 's',
       description: 'Number of spaces to use when generating output JSON files.',
       default: 2,
+    },
+    maxLinesPerRequest: {
+      type: 'number',
+      alias: 'l',
+      description:
+        'Maximum number of lines per request. If your file have more lines than maximum number of lines per request, multiple api requests will be sent.',
+      default: 50,
     },
   })
   .parseSync();

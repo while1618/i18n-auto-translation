@@ -65,20 +65,21 @@ $ i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
 
 ### Options
 
-| Key                                       | Alias | Description                                                                                            | Default         |
-| ----------------------------------------- | ----- | ------------------------------------------------------------------------------------------------------ | --------------- |
-| --help                                    | /     | All available options.                                                                                 | /               |
-| --version                                 | /     | Current version.                                                                                       | /               |
-| --apiProvider                             | -a    | API Provider.                                                                                          | google-official |
-| --key [required]                          | -k    | Subscription key for the API provider.                                                                 | /               |
-| --region                                  | -r    | Key region. Used only by the Official Azure API.                                                       | global          |
-| --filePath [filePath or dirPath required] | -p    | Path to a single JSON file.                                                                            | /               |
-| --dirPath [filePath or dirPath required]  | -d    | Path to a directory in which you will recursively find all JSON files named [from].json (e.g. en.json) | /               |
-| --from                                    | -f    | From which language you want to translate.                                                             | en              |
-| --to [required]                           | -t    | To which language you want to translate.                                                               | /               |
-| --override                                | -o    | Override all created i18n JSON files.                                                                  | false           |
-| --certificatePath                         | -c    | Path to a custom certificate.                                                                          | /               |
-| --spaces                                  | -s    | Number of spaces to use when generating output JSON files.                                             | 2               |
+| Key                                       | Alias | Description                                                                                                                                     | Default         |
+| ----------------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| --help                                    | /     | All available options.                                                                                                                          | /               |
+| --version                                 | /     | Current version.                                                                                                                                | /               |
+| --apiProvider                             | -a    | API Provider.                                                                                                                                   | google-official |
+| --key [required]                          | -k    | Subscription key for the API provider.                                                                                                          | /               |
+| --region                                  | -r    | Key region. Used only by the Official Azure API.                                                                                                | global          |
+| --filePath [filePath or dirPath required] | -p    | Path to a single JSON file.                                                                                                                     | /               |
+| --dirPath [filePath or dirPath required]  | -d    | Path to a directory in which you will recursively find all JSON files named [from].json (e.g. en.json)                                          | /               |
+| --from                                    | -f    | From which language you want to translate.                                                                                                      | en              |
+| --to [required]                           | -t    | To which language you want to translate.                                                                                                        | /               |
+| --override                                | -o    | Override all created i18n JSON files.                                                                                                           | false           |
+| --certificatePath                         | -c    | Path to a custom certificate.                                                                                                                   | /               |
+| --spaces                                  | -s    | Number of spaces to use when generating output JSON files.                                                                                      | 2               |
+| --maxLinesPerRequest                      | -l    | Maximum number of lines per request. If your file have more lines than maximum number of lines per request, multiple api requests will be sent. | 50              |
 
 ## Demo
 
