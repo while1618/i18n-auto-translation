@@ -16,8 +16,9 @@ export class DeepLProAPI extends Translate {
 
   constructor() {
     super();
-    if (argv.certificatePath)
+    if (argv.certificatePath) {
       DeepLProAPI.axiosConfig.httpsAgent = addCustomCert(argv.certificatePath);
+    }
   }
 
   protected callTranslateAPI = async (valuesForTranslation: string[]): Promise<string> => {

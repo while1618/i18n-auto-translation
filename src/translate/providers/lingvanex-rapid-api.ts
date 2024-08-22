@@ -18,8 +18,9 @@ export class LingvanexRapidAPI extends Translate {
 
   constructor() {
     super();
-    if (argv.certificatePath)
+    if (argv.certificatePath) {
       LingvanexRapidAPI.axiosConfig.httpsAgent = addCustomCert(argv.certificatePath);
+    }
   }
 
   protected callTranslateAPI = async (valuesForTranslation: string[]): Promise<string> => {

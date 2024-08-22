@@ -14,14 +14,21 @@ export abstract class Translate {
   private skippedWords: string[] = [];
 
   public translate = (): void => {
-    if (argv.filePath && argv.dirPath)
+    if (argv.filePath && argv.dirPath) {
       throw new Error('You should only provide a single file or a directory.');
+    }
 
-    if (!argv.filePath && !argv.dirPath)
+    if (!argv.filePath && !argv.dirPath) {
       throw new Error('You must provide a single file or a directory.');
+    }
 
-    if (argv.dirPath) this.translateFiles(argv.dirPath);
-    else if (argv.filePath) this.translateFile(argv.filePath);
+    if (argv.dirPath) {
+      this.translateFiles(argv.dirPath);
+    }
+
+    if (argv.filePath) {
+      this.translateFile(argv.filePath);
+    }
   };
 
   private translateFiles = (dirPath: string): void => {
@@ -29,7 +36,9 @@ export abstract class Translate {
     const filePaths: string[] = globSync(`${dirPath}/**/${argv.from}.json`, {
       ignore: [`${dirPath}/**/node_modules/**`, `${dirPath}/**/dist/**`],
     });
-    if (filePaths.length === 0) throw new Error(`0 files found for translation in ${dirPath}`);
+    if (filePaths.length === 0) {
+      throw new Error(`0 files found for translation in ${dirPath}`);
+    }
     console.log(`${filePaths.length} files found.`);
     filePaths.forEach((filePath) => this.translateFile(filePath));
   };
@@ -41,9 +50,11 @@ export abstract class Translate {
         filePath.substring(0, filePath.lastIndexOf('/')),
         `${argv.to}.json`,
       );
-      if (argv.override || !fs.existsSync(saveTo))
+      if (argv.override || !fs.existsSync(saveTo)) {
         this.translationDoesNotExists(fileForTranslation, saveTo);
-      else this.translationAlreadyExists(fileForTranslation, saveTo);
+      } else {
+        this.translationAlreadyExists(fileForTranslation, saveTo);
+      }
     } catch (e) {
       console.log(`${(e as Error).message} at: ${filePath}`);
     }
@@ -105,8 +116,11 @@ export abstract class Translate {
 
     (function findValues(json: JSONObj): void {
       Object.values(json).forEach((value) => {
-        if (typeof value === 'object') findValues(value);
-        else values.push(value);
+        if (typeof value === 'object') {
+          findValues(value);
+        } else {
+          values.push(value);
+        }
       });
     })(object);
 
@@ -203,8 +217,11 @@ export abstract class Translate {
 
     (function addTranslations(json: JSONObj): void {
       Object.keys(json).forEach((key: string) => {
-        if (typeof json[key] === 'object') addTranslations(json[key] as JSONObj);
-        else json[key] = translations[index++]?.trim();
+        if (typeof json[key] === 'object') {
+          addTranslations(json[key] as JSONObj);
+        } else {
+          json[key] = translations[index++]?.trim();
+        }
       });
     })(translatedObject);
 
