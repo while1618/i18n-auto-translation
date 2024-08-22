@@ -30,60 +30,55 @@
   
 ## Description
 
-i18n-auto-translation helps you translate your JSON internationalization files. You need to pick one of the translation API providers that are supported, pass the subscription key, language to which you want to translate, path to the file or directory, and you are good to go.
+i18n-auto-translation helps you translate your i18n JSON files. You need to pick one of the translation API providers that are supported, pass the subscription key, language to which you want to translate, path to the file or directory, and you are good to go.
 
 ### How It Works?
 
-- If there is no translation for the file you provided, the complete file will be translated, and the new file will be created with the same structure as the original file, keeping the keys in original language, and translating only values.
+- If there is no translation for the file you provided, the complete file will be translated, and the new file will be created with the same structure as the original file, keeping the keys in the original language, and translating only values.
 - You can pass a file with the nested JSON objects, and everything will be translated as you expect.
-- The newly created file will be named [to].json. (e.g. sr_latn.json)
-- If the translation for the file already exists, the tool will only translate newly added lines, or delete the one that are no longer in the original file, keeping the structure same as the original file.
-- Don't worry, tool will call an API only for the newly created lines, already translated one will be skipped.
-- Translate APIs are not ideal, and that's why you will need from time to time to override some translations manually, when you manually translate some value, the tool will keep that value, and won't try to translate it again.
-- If you pass a directory, the tool will recursively find all files named [from].json (e.g. en.json), and the translations will be saved in the same directory as the original file(s). All the described above will be still applicable.
-- Words that are wrapped in `{{}}`, `{}`, `<>`, `</>` won't be translated. e.g. `{{skip}} {skip} <strong> </strong> <br />`
-
-## Installation
-
-You can install package globally on your machine:
-
-```bash
-$ npm i -g i18n-auto-translation
-```
-
-Or save it as dev dependency in your project:
-
-```bash
-$ npm i -D i18n-auto-translation
-```
+- The newly created file will be named [to].json. (e.g. de.json)
+- If the translation for the file already exists, only newly added lines will be translated (API will be called only for those lines), and lines that are no longer in the original file will be deleted.
+- Translate APIs are not ideal, and that's why you will need from time to time to override some translations manually. When you manually translate some value, it will remain like that, and it will not be overridden again, unless you use `override` flag.
+- If you pass a directory instead of a single file, the library will recursively find all the files named [from].json (e.g. en.json), and the translations will be saved in the same directories as the original file.
+- Words that are wrapped in `{{}}`, `{}`, `<>`, `</>` won't be translated. e.g. `{{skip}} {skip} <strong> </strong> <br />`.
 
 ## Usage
 
 ```bash
-$ i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
+$ npx i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUAGE
 ```
 
 ### Options
 
-| Key                                       | Alias | Description                                                                                                                                     | Default         |
-| ----------------------------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| --help                                    | /     | All available options.                                                                                                                          | /               |
-| --version                                 | /     | Current version.                                                                                                                                | /               |
-| --apiProvider                             | -a    | API Provider.                                                                                                                                   | google-official |
-| --key [required]                          | -k    | Subscription key for the API provider.                                                                                                          | /               |
-| --region                                  | -r    | Key region. Used only by the Official Azure API.                                                                                                | global          |
-| --filePath [filePath or dirPath required] | -p    | Path to a single JSON file.                                                                                                                     | /               |
-| --dirPath [filePath or dirPath required]  | -d    | Path to a directory in which you will recursively find all JSON files named [from].json (e.g. en.json)                                          | /               |
-| --from                                    | -f    | From which language you want to translate.                                                                                                      | en              |
-| --to [required]                           | -t    | To which language you want to translate.                                                                                                        | /               |
-| --override                                | -o    | Override all created i18n JSON files.                                                                                                           | false           |
-| --certificatePath                         | -c    | Path to a custom certificate.                                                                                                                   | /               |
-| --spaces                                  | -s    | Number of spaces to use when generating output JSON files.                                                                                      | 2               |
-| --maxLinesPerRequest                      | -l    | Maximum number of lines per request. If your file have more lines than maximum number of lines per request, multiple api requests will be sent. | 50              |
+| Key                                       | Alias | Description                                                                                               | Default         |
+| ----------------------------------------- | ----- | --------------------------------------------------------------------------------------------------------- | --------------- |
+| --help                                    | /     | All available options.                                                                                    | /               |
+| --version                                 | /     | Current version.                                                                                          | /               |
+| --apiProvider                             | -a    | API Provider.                                                                                             | google-official |
+| --key [required]                          | -k    | Subscription key for the API provider.                                                                    | /               |
+| --region                                  | -r    | Key region. Used only by the Official Azure API.                                                          | global          |
+| --filePath [filePath or dirPath required] | -p    | Path to a single JSON file.                                                                               | /               |
+| --dirPath [filePath or dirPath required]  | -d    | Path to a directory in which you will recursively find all JSON files named [from].json (e.g. en.json)    | /               |
+| --from                                    | -f    | From which language you want to translate.                                                                | en              |
+| --to [required]                           | -t    | To which language you want to translate.                                                                  | /               |
+| --override                                | -o    | Override existing translation(s).                                                                         | false           |
+| --certificatePath                         | -c    | Path to a custom certificate.                                                                             | /               |
+| --spaces                                  | -s    | Number of spaces to use when generating output JSON files.                                                | 2               |
+| --maxLinesPerRequest                      | -l    | Maximum number of lines per request. For every `x` number of lines, separated request is sent to the api. | 50              |
 
 ## Demo
 
 https://user-images.githubusercontent.com/49982438/158603886-23c9978b-56e0-4f50-a1ce-afdb03ef1291.mp4
+
+## Known issue
+
+In some cases, you might face problem with google translate api. When you try to translate a lot of text, the response might be wrong, and it will change the structure of the translated json file.
+
+Two issues were opened related to this problem, you can read more about it here. [#12](https://github.com/while1618/i18n-auto-translation/issues/12) [#46](https://github.com/while1618/i18n-auto-translation/issues/46)
+
+If you face this problem, try to change `maxLinesPerRequest`. The default value is `50`, and that means if your file is larger than 50 lines, multiple request will be sent to the api. For every 50 lines, one request will be sent. Try to reduce this number in order to fix the issue.
+
+In my testing, only google had this problem, but you can try the same approach if it happens with other provides. Feel free to open the issue if you have any problems.
 
 ## Translate Providers
 

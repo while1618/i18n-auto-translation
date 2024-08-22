@@ -72,7 +72,7 @@ export const argv: Arguments = yargs(process.argv.slice(2))
     override: {
       type: 'boolean',
       alias: 'o',
-      description: 'Override all created i18n JSON files.',
+      description: 'Override existing translation(s)',
       default: false,
     },
     certificatePath: {
@@ -90,7 +90,7 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       type: 'number',
       alias: 'l',
       description:
-        'Maximum number of lines per request. If your file have more lines than maximum number of lines per request, multiple api requests will be sent.',
+        'Maximum number of lines per request. For every `x` number of lines, separated request is sent to the api.',
       default: 50,
     },
   })
