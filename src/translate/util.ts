@@ -13,7 +13,7 @@ export const addCustomCert = (certificatePath: string): https.Agent => {
   }
 };
 
-const escapeRegExp = (string: string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escapeRegExp = (string: string): string => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-export const replaceAll = (str: string, find: string, replace: string) =>
+export const replaceAll = (str: string, find: string, replace: string): string =>
   str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
