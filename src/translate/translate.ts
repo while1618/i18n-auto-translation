@@ -106,7 +106,7 @@ export abstract class Translate {
     await this.translateValues(valuesForTranslation, diffForTranslation);
   };
 
-  private getValuesForTranslation = (object: JSONObj): string[] => {
+  private getValuesForTranslation = (objectBeforeTranslation: JSONObj): string[] => {
     let values: string[] = [];
 
     (function findValues(json: JSONObj): void {
@@ -117,7 +117,7 @@ export abstract class Translate {
           values.push(value);
         }
       });
-    })(object);
+    })(objectBeforeTranslation);
 
     values = values.map((value) => this.skipWords(value));
     return values;
@@ -141,10 +141,10 @@ export abstract class Translate {
 
         const responses = await Promise.all(promises);
         const translated = responses.join(Translate.sentenceDelimiter);
-        this.saveTranslation(translated, objectBeforeTranslation);
+        this.saveTranslation(this.cleanUpTranslations(translated), objectBeforeTranslation);
       } else {
         const translated = await this.callTranslateAPI(valuesForTranslation);
-        this.saveTranslation(translated, objectBeforeTranslation);
+        this.saveTranslation(this.cleanUpTranslations(translated), objectBeforeTranslation);
       }
     } catch (error) {
       this.printError(error);
@@ -162,6 +162,13 @@ export abstract class Translate {
     return resultArrays;
   };
 
+  private cleanUpTranslations = (value: string): string => {
+    // This is needed because of this weird bug:
+    // https://github.com/while1618/i18n-auto-translation/issues/12
+    const translations = replaceAll(value, '#__ #', '#__#');
+    return replaceAll(translations, '# __#', '#__#');
+  };
+
   protected abstract callTranslateAPI: (valuesForTranslation: string[]) => Promise<string>;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -175,21 +182,20 @@ export abstract class Translate {
     );
   };
 
-  private saveTranslation = (value: string, objectBeforeTranslation: JSONObj): void => {
-    let translations = replaceAll(value, '#__ #', '#__#');
-    translations = replaceAll(translations, '# __#', '#__#');
-    let content: JSONObj = this.createTranslatedObject(
+  private saveTranslation = (translations: string, objectBeforeTranslation: JSONObj): void => {
+    let objectAfterTranslation: JSONObj = this.createTranslatedObject(
       translations.split(Translate.sentenceDelimiter.trim()),
       objectBeforeTranslation,
     );
-    let message: string = `File saved: ${this.saveTo}`;
     if (fs.existsSync(this.saveTo) && !argv.override) {
       const existingTranslation = JSON.parse(fs.readFileSync(this.saveTo, 'utf-8')) as JSONObj;
-      content = extend(true, existingTranslation, content) as JSONObj;
-      content = this.reorderJSONKeys(this.fileForTranslation, content);
-      message = `File updated: ${this.saveTo}`;
+      objectAfterTranslation = extend(true, existingTranslation, objectAfterTranslation) as JSONObj;
+      objectAfterTranslation = this.reorderJSONKeys(
+        this.fileForTranslation,
+        objectAfterTranslation,
+      );
     }
-    this.writeToFile(content, message);
+    this.writeToFile(objectAfterTranslation, this.getSaveMessage());
   };
 
   private createTranslatedObject = (
@@ -235,6 +241,12 @@ export abstract class Translate {
 
     return reordered;
   }
+
+  private getSaveMessage = (): string => {
+    return fs.existsSync(this.saveTo) && !argv.override
+      ? `File updated: ${this.saveTo}`
+      : `File saved: ${this.saveTo}`;
+  };
 
   private writeToFile = (content: JSONObj, message: string): void => {
     try {
