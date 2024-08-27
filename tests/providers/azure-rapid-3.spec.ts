@@ -33,7 +33,7 @@ describe('AzureRapid Provider', () => {
     );
   });
 
-  it('should translate files from en to sr, in a directory', () => {
+  it('should translate files from en to sr, in a directory', async () => {
     const translations = [
       {
         translations: [
@@ -45,6 +45,8 @@ describe('AzureRapid Provider', () => {
     ];
     mockedAxios.post.mockResolvedValue({ data: translations } as AzureTranslateResponse);
     new AzureRapidAPI().translate();
+
+    await new Promise(process.nextTick); // wait fot translate method to finish
 
     expect(
       mockedAxios.post.mockResolvedValue({ data: translations } as AzureTranslateResponse),
