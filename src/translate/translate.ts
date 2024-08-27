@@ -186,6 +186,7 @@ export abstract class Translate {
     if (fs.existsSync(this.saveTo) && !argv.override) {
       const existingTranslation = JSON.parse(fs.readFileSync(this.saveTo, 'utf-8')) as JSONObj;
       content = extend(true, existingTranslation, content) as JSONObj;
+      content = this.reorderJSONKeys(this.fileForTranslation, content);
       message = `File updated: ${this.saveTo}`;
     }
     this.writeToFile(content, message);
@@ -214,6 +215,25 @@ export abstract class Translate {
 
   private returnSkippedWords(value: string): string {
     return value.replace(Translate.skipWordRegex, () => `${this.skippedWords.shift()}`);
+  }
+
+  private reorderJSONKeys(reference: JSONObj, target: JSONObj): JSONObj {
+    const reordered: JSONObj = {};
+
+    Object.keys(reference).forEach((key) => {
+      if (key in target) {
+        const refValue = reference[key];
+        const targetValue = target[key];
+
+        if (typeof refValue === 'object' && typeof targetValue === 'object') {
+          reordered[key] = this.reorderJSONKeys(refValue, targetValue);
+        } else {
+          reordered[key] = targetValue;
+        }
+      }
+    });
+
+    return reordered;
   }
 
   private writeToFile = (content: JSONObj, message: string): void => {
