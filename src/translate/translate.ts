@@ -11,6 +11,9 @@ export abstract class Translate {
   public static readonly sentenceDelimiter: string = '\n#__#\n';
   private static readonly skipWordRegex: RegExp =
     /({{([^{}]+)}}|<([^<>]+)>|<\/([^<>]+)>|\{([^{}]+)\})/g;
+
+  private fileForTranslation: JSONObj = {};
+  private saveTo: string = '';
   private skippedWords: string[] = [];
 
   public translate = (): void => {
@@ -48,76 +51,59 @@ export abstract class Translate {
 
   private translateFile = async (filePath: string): Promise<void> => {
     try {
-      const fileForTranslation = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as JSONObj;
-      const saveTo: string = path.join(
-        filePath.substring(0, filePath.lastIndexOf('/')),
-        `${argv.to}.json`,
-      );
-      if (argv.override || !fs.existsSync(saveTo)) {
-        await this.translationDoesNotExists(fileForTranslation, saveTo);
+      this.fileForTranslation = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as JSONObj;
+      this.saveTo = path.join(filePath.substring(0, filePath.lastIndexOf('/')), `${argv.to}.json`);
+      if (argv.override || !fs.existsSync(this.saveTo)) {
+        await this.translationDoesNotExists();
       } else {
-        await this.translationAlreadyExists(fileForTranslation, saveTo);
+        await this.translationAlreadyExists();
       }
     } catch (e) {
       console.log(`${(e as Error).message} at: ${filePath}`);
     }
   };
 
-  private translationAlreadyExists = async (
-    fileForTranslation: JSONObj,
-    saveTo: string,
-  ): Promise<void> => {
+  private translationDoesNotExists = async (): Promise<void> => {
+    if (Object.keys(this.fileForTranslation).length === 0) {
+      console.log(`Nothing to translate, file is empty: ${this.saveTo}`);
+      return;
+    }
+    const valuesForTranslation: string[] = this.getValuesForTranslation(this.fileForTranslation);
+    await this.translateValues(valuesForTranslation, this.fileForTranslation);
+  };
+
+  private translationAlreadyExists = async (): Promise<void> => {
     try {
-      const existingTranslation = JSON.parse(fs.readFileSync(saveTo, 'utf-8')) as JSONObj;
-      this.deleteIfNeeded(fileForTranslation, existingTranslation, saveTo);
-      await this.translateIfNeeded(fileForTranslation, existingTranslation, saveTo);
+      const existingTranslation = JSON.parse(fs.readFileSync(this.saveTo, 'utf-8')) as JSONObj;
+      this.deleteIfNeeded(existingTranslation);
+      await this.translateIfNeeded(existingTranslation);
     } catch (e) {
-      console.log(`${(e as Error).message} at: ${saveTo}`);
+      console.log(`${(e as Error).message} at: ${this.saveTo}`);
     }
   };
 
-  private deleteIfNeeded = (
-    fileForTranslation: JSONObj,
-    existingTranslation: JSONObj,
-    saveTo: string,
-  ): void => {
+  private deleteIfNeeded = (existingTranslation: JSONObj): void => {
     const diffForDeletion: JSONObj = deletedDiff(
       existingTranslation,
-      fileForTranslation,
+      this.fileForTranslation,
     ) as JSONObj;
     if (Object.keys(diffForDeletion).length !== 0) {
       const content = extend(true, existingTranslation, diffForDeletion) as JSONObj;
-      this.writeToFile(content, saveTo, `Unnecessary lines deleted for: ${saveTo}`);
+      this.writeToFile(content, `Unnecessary lines deleted for: ${this.saveTo}`);
     }
   };
 
-  private translateIfNeeded = async (
-    fileForTranslation: JSONObj,
-    existingTranslation: JSONObj,
-    saveTo: string,
-  ): Promise<void> => {
+  private translateIfNeeded = async (existingTranslation: JSONObj): Promise<void> => {
     const diffForTranslation: JSONObj = addedDiff(
       existingTranslation,
-      fileForTranslation,
+      this.fileForTranslation,
     ) as JSONObj;
     if (Object.keys(diffForTranslation).length === 0) {
-      console.log(`Everything already translated for: ${saveTo}`);
+      console.log(`Everything already translated for: ${this.saveTo}`);
       return;
     }
     const valuesForTranslation: string[] = this.getValuesForTranslation(diffForTranslation);
-    await this.translateValues(valuesForTranslation, diffForTranslation, saveTo);
-  };
-
-  private translationDoesNotExists = async (
-    fileForTranslation: JSONObj,
-    saveTo: string,
-  ): Promise<void> => {
-    if (Object.keys(fileForTranslation).length === 0) {
-      console.log(`Nothing to translate, file is empty: ${saveTo}`);
-      return;
-    }
-    const valuesForTranslation: string[] = this.getValuesForTranslation(fileForTranslation);
-    await this.translateValues(valuesForTranslation, fileForTranslation, saveTo);
+    await this.translateValues(valuesForTranslation, diffForTranslation);
   };
 
   private getValuesForTranslation = (object: JSONObj): string[] => {
@@ -146,8 +132,7 @@ export abstract class Translate {
 
   private translateValues = async (
     valuesForTranslation: string[],
-    originalObject: JSONObj,
-    saveTo: string,
+    objectBeforeTranslation: JSONObj,
   ): Promise<void> => {
     try {
       if (valuesForTranslation.length > argv.maxLinesPerRequest) {
@@ -156,13 +141,13 @@ export abstract class Translate {
 
         const responses = await Promise.all(promises);
         const translated = responses.join(Translate.sentenceDelimiter);
-        this.saveTranslation(translated, originalObject, saveTo);
+        this.saveTranslation(translated, objectBeforeTranslation);
       } else {
-        const response = await this.callTranslateAPI(valuesForTranslation);
-        this.saveTranslation(response, originalObject, saveTo);
+        const translated = await this.callTranslateAPI(valuesForTranslation);
+        this.saveTranslation(translated, objectBeforeTranslation);
       }
     } catch (error) {
-      this.printError(error, saveTo);
+      this.printError(error);
     }
   };
 
@@ -180,8 +165,8 @@ export abstract class Translate {
   protected abstract callTranslateAPI: (valuesForTranslation: string[]) => Promise<string>;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private printError = (error: any, saveTo: string): void => {
-    const errorFilePath = saveTo.replace(`${argv.to}.json`, `${argv.from}.json`);
+  private printError = (error: any): void => {
+    const errorFilePath = this.saveTo.replace(`${argv.to}.json`, `${argv.from}.json`);
     console.error(`Request error for file: ${errorFilePath}`);
     console.log(`Status Code: ${error?.response?.status ?? error?.response?.statusCode}`);
     console.log(`Status Text: ${error?.response?.statusText ?? error?.response?.statusMessage}`);
@@ -190,27 +175,28 @@ export abstract class Translate {
     );
   };
 
-  private saveTranslation = (value: string, originalObject: JSONObj, saveTo: string): void => {
-    // replaceAll() is used because of weird bug that sometimes happens
-    // when translate api return delimiter with space in between
+  private saveTranslation = (value: string, objectBeforeTranslation: JSONObj): void => {
     let translations = replaceAll(value, '#__ #', '#__#');
     translations = replaceAll(translations, '# __#', '#__#');
     let content: JSONObj = this.createTranslatedObject(
       translations.split(Translate.sentenceDelimiter.trim()),
-      originalObject,
+      objectBeforeTranslation,
     );
-    let message: string = `File saved: ${saveTo}`;
-    if (fs.existsSync(saveTo) && !argv.override) {
-      const existingTranslation = JSON.parse(fs.readFileSync(saveTo, 'utf-8')) as JSONObj;
+    let message: string = `File saved: ${this.saveTo}`;
+    if (fs.existsSync(this.saveTo) && !argv.override) {
+      const existingTranslation = JSON.parse(fs.readFileSync(this.saveTo, 'utf-8')) as JSONObj;
       content = extend(true, existingTranslation, content) as JSONObj;
-      message = `File updated: ${saveTo}`;
+      message = `File updated: ${this.saveTo}`;
     }
-    this.writeToFile(content, saveTo, message);
+    this.writeToFile(content, message);
   };
 
-  private createTranslatedObject = (translations: string[], originalObject: JSONObj): JSONObj => {
+  private createTranslatedObject = (
+    translations: string[],
+    objectBeforeTranslation: JSONObj,
+  ): JSONObj => {
     translations = translations.map((value) => this.returnSkippedWords(value));
-    const translatedObject: JSONObj = { ...originalObject };
+    const translatedObject: JSONObj = { ...objectBeforeTranslation };
     let index: number = 0;
 
     (function addTranslations(json: JSONObj): void {
@@ -230,9 +216,9 @@ export abstract class Translate {
     return value.replace(Translate.skipWordRegex, () => `${this.skippedWords.shift()}`);
   }
 
-  private writeToFile = (content: JSONObj, saveTo: string, message: string): void => {
+  private writeToFile = (content: JSONObj, message: string): void => {
     try {
-      fs.writeFileSync(saveTo, JSON.stringify(content, null, argv.spaces));
+      fs.writeFileSync(this.saveTo, JSON.stringify(content, null, argv.spaces));
       console.log(message);
     } catch (e) {
       console.log((e as Error).message);
