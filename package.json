@@ -12,7 +12,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc -p tsconfig.build.json",
-    "test": "",
+    "test": "jest --runInBand",
     "test:coverage": "jest --runInBand --coverage",
     "lint": "prettier --check . && eslint .",
     "lint:fix": "prettier --write . && eslint --fix .",

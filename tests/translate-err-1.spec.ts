@@ -7,8 +7,8 @@ import { AzureOfficialAPI } from '../src/translate/providers/azure-official-api'
 
 describe('Translate', () => {
   it('should throw error, filePath or dirPath not provided', () => {
-    expect(() => {
-      new AzureOfficialAPI().translate();
-    }).toThrow('You should only provide a single file or a directory.');
+    expect(async () => {
+      await new AzureOfficialAPI().translate();
+    }).rejects.toThrow('You should only provide a single file or a directory.');
   });
 });
