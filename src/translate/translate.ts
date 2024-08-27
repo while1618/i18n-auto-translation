@@ -16,7 +16,7 @@ export abstract class Translate {
   private saveTo: string = '';
   private skippedWords: string[] = [];
 
-  public translate = (): void => {
+  public translate = async (): Promise<void> => {
     if (argv.filePath && argv.dirPath) {
       throw new Error('You should only provide a single file or a directory.');
     }
@@ -26,11 +26,11 @@ export abstract class Translate {
     }
 
     if (argv.dirPath) {
-      this.translateFiles(argv.dirPath);
+      await this.translateFiles(argv.dirPath);
     }
 
     if (argv.filePath) {
-      this.translateFile(argv.filePath);
+      await this.translateFile(argv.filePath);
     }
   };
 
