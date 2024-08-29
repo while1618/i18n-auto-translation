@@ -165,8 +165,12 @@ export abstract class Translate {
   private cleanUpTranslations = (value: string): string => {
     // This is needed because of this weird bug:
     // https://github.com/while1618/i18n-auto-translation/issues/12
-    const translations = replaceAll(value, '#__ #', '#__#');
-    return replaceAll(translations, '# __#', '#__#');
+    const patterns: [string, string][] = [
+      ['#__ #', '#__#'],
+      ['# __#', '#__#'],
+      ['# __ #', '#__#'],
+    ];
+    return replaceAll(value, patterns);
   };
 
   protected abstract callTranslateAPI: (valuesForTranslation: string[]) => Promise<string>;
