@@ -8,9 +8,9 @@
 
 <p align="center">
   <a href="#description">Description</a> •
-  <a href="#installation">Installation</a> •
   <a href="#usage">Usage</a> •
   <a href="#demo">Demo</a> •
+  <a href="#known-issue">Known issue</a> •
   <a href="#translate-providers">Translate Providers</a> •
   <a href="#credits">Credits</a> •
   <a href="#license">License</a>
