@@ -32,6 +32,8 @@
 
 i18n-auto-translation helps you translate your i18n JSON files. You need to pick one of the translation API providers that are supported, pass the subscription key, language to which you want to translate, path to the file or directory, and you are good to go.
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Q5Q412OZ0R)
+
 ### How It Works?
 
 - If there is no translation for the file you provided, the complete file will be translated, and the new file will be created with the same structure as the original file, keeping the keys in the original language, and translating only values.
