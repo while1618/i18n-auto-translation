@@ -13,6 +13,8 @@ interface Arguments {
   certificatePath?: string;
   spaces: number;
   maxLinesPerRequest: number;
+  context?: string;
+  formality?: string;
 }
 
 export const argv: Arguments = yargs(process.argv.slice(2))
@@ -92,6 +94,18 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       description:
         'Maximum number of lines per request. For every `x` number of lines, separated request is sent to the api.',
       default: 50,
+    },
+    context: {
+      type: 'string',
+      alias: 'x',
+      description: 'Context for the translation. Used only by the DeepL API.',
+    },
+    formality: {
+      type: 'string',
+      alias: 'm',
+      description: 'Formality for the translation. Used only by the DeepL API.',
+      choices: ['default', 'more', 'less', 'prefer_more', 'prefer_less'],
+      default: 'default',
     },
   })
   .parseSync();

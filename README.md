@@ -67,6 +67,8 @@ $ npx i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUA
 | --certificatePath                         | -c    | Path to a custom certificate.                                                                             | /               |
 | --spaces                                  | -s    | Number of spaces to use when generating output JSON files.                                                | 2               |
 | --maxLinesPerRequest                      | -l    | Maximum number of lines per request. For every `x` number of lines, separated request is sent to the api. | 50              |
+| --context                                 | -x    | Context for the translation. Used only by the DeepL API.                                                  | default         |
+| --formality                               | -m    | Formality for the translation. Used only by the DeepL API.                                                | /               |
 
 ## Demo
 
