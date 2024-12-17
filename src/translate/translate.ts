@@ -163,9 +163,11 @@ export abstract class Translate {
   };
 
   private cleanUpTranslations = (value: string): string => {
-    // This is needed because of this weird bug:
+    // This is needed because of weird bugs:
     // https://github.com/while1618/i18n-auto-translation/issues/12
+    // https://github.com/while1618/i18n-auto-translation/issues/53
     const patterns: [string, string][] = [
+      ['#___#', '#__#'],
       ['#__ #', '#__#'],
       ['# __#', '#__#'],
       ['# __ #', '#__#'],
