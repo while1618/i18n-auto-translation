@@ -125,7 +125,7 @@ export abstract class Translate {
 
   private skipWords(value: string): string {
     return value.replace(Translate.skipWordRegex, (match: string) => {
-      this.skippedWords.push(match.trim());
+      this.skippedWords.push(match);
       return `{{${this.skippedWords.length - 1}}}`;
     });
   }
@@ -190,7 +190,7 @@ export abstract class Translate {
 
   private saveTranslation = (translations: string, objectBeforeTranslation: JSONObj): void => {
     let objectAfterTranslation: JSONObj = this.createTranslatedObject(
-      translations.split(Translate.sentenceDelimiter.trim()),
+      translations.split(Translate.sentenceDelimiter),
       objectBeforeTranslation,
     );
     if (fs.existsSync(this.saveTo) && !argv.override) {
@@ -217,7 +217,7 @@ export abstract class Translate {
         if (typeof json[key] === 'object') {
           addTranslations(json[key] as JSONObj);
         } else {
-          json[key] = translations[index++]?.trim();
+          json[key] = argv.trim ? translations[index++]?.trim() : translations[index++];
         }
       });
     })(translatedObject);

@@ -14,7 +14,8 @@ interface Arguments {
   spaces: number;
   maxLinesPerRequest: number;
   context?: string;
-  formality?: string;
+  formality: string;
+  trim: boolean;
 }
 
 export const argv: Arguments = yargs(process.argv.slice(2))
@@ -106,6 +107,12 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       description: 'Formality for the translation. Used only by the DeepL API.',
       choices: ['default', 'more', 'less', 'prefer_more', 'prefer_less'],
       default: 'default',
+    },
+    trim: {
+      type: 'boolean',
+      alias: 'i',
+      description: 'Trim string after translation.',
+      default: true,
     },
   })
   .parseSync();
