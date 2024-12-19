@@ -7,7 +7,7 @@ import { Translate } from '../translate';
 import { addCustomCert } from '../util';
 
 export class AzureRapidAPI extends Translate {
-  private static readonly endpoint: string = 'microsoft-translator-text.p.rapidapi.com';
+  private static readonly endpoint: string = 'microsoft-translator-text-api3.p.rapidapi.com';
   private static readonly axiosConfig: AxiosRequestConfig = {
     headers: {
       'X-ClientTraceId': crypto.randomUUID(),
@@ -16,7 +16,6 @@ export class AzureRapidAPI extends Translate {
       'Content-type': 'application/json',
     },
     params: {
-      'api-version': '3.0',
       from: argv.from,
       to: argv.to,
     },
