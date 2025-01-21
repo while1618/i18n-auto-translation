@@ -21,3 +21,5 @@ export const replaceAll = (str: string, patterns: [string, string][]): string =>
     str,
   );
 };
+
+export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

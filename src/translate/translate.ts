@@ -5,7 +5,7 @@ import extend from 'just-extend';
 import path from 'path';
 import { argv } from './cli';
 import { JSONObj } from './payload';
-import { replaceAll } from './util';
+import { delay, replaceAll } from './util';
 
 export abstract class Translate {
   public static readonly sentenceDelimiter: string = '\n#__#\n';
@@ -137,9 +137,12 @@ export abstract class Translate {
     try {
       if (valuesForTranslation.length > argv.maxLinesPerRequest) {
         const splitted = this.splitValuesForTranslation(valuesForTranslation);
-        const promises = splitted.map((values) => this.callTranslateAPI(values));
-
-        const responses = await Promise.all(promises);
+        const responses: string[] = [];
+        for (const values of splitted) {
+          const response = await this.callTranslateAPI(values);
+          responses.push(response);
+          await delay(500);
+        }
         const translated = responses.join(Translate.sentenceDelimiter);
         this.saveTranslation(this.cleanUpTranslations(translated), objectBeforeTranslation);
       } else {
