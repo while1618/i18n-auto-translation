@@ -70,6 +70,7 @@ $ npx i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUA
 | --context                                 | -x    | Context for the translation. Used only by the DeepL API.                                                  | /               |
 | --formality                               | -m    | Formality for the translation. Used only by the DeepL API.                                                | default         |
 | --trim                                    | -i    | Trim string after translation.                                                                            | true            |
+| --delay                                   | -e    | Delay between every request made to the translate api.                                                    | 250             |
 
 ## Demo
 

@@ -141,7 +141,7 @@ export abstract class Translate {
         for (const values of splitted) {
           const response = await this.callTranslateAPI(values);
           responses.push(response);
-          await delay(500);
+          await delay(argv.delay);
         }
         const translated = responses.join(Translate.sentenceDelimiter);
         this.saveTranslation(this.cleanUpTranslations(translated), objectBeforeTranslation);

@@ -16,6 +16,7 @@ interface Arguments {
   context?: string;
   formality: string;
   trim: boolean;
+  delay: number;
 }
 
 export const argv: Arguments = yargs(process.argv.slice(2))
@@ -113,6 +114,12 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       alias: 'i',
       description: 'Trim string after translation.',
       default: true,
+    },
+    delay: {
+      type: 'number',
+      alias: 'e',
+      description: 'Delay between every request made to the translate api.',
+      default: 250,
     },
   })
   .parseSync();
