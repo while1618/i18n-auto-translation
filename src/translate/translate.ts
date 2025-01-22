@@ -3,6 +3,7 @@ import fs from 'fs';
 import { globSync } from 'glob';
 import extend from 'just-extend';
 import path from 'path';
+import yoctoSpinner from 'yocto-spinner';
 import { argv } from './cli';
 import { JSONObj } from './payload';
 import { delay, replaceAll } from './util';
@@ -35,14 +36,14 @@ export abstract class Translate {
   };
 
   private translateFiles = async (dirPath: string): Promise<void> => {
-    console.log('Finding files for translation...');
+    const spinner = yoctoSpinner({ text: 'Finding files for translation...' }).start();
     const filePaths: string[] = globSync(`${dirPath}/**/${argv.from}.json`, {
       ignore: [`${dirPath}/**/node_modules/**`, `${dirPath}/**/dist/**`],
     });
     if (filePaths.length === 0) {
       throw new Error(`0 files found for translation in ${dirPath}`);
     }
-    console.log(`${filePaths.length} files found.`);
+    spinner.success(`${filePaths.length} files found.`);
     for (const filePath of filePaths) {
       this.skippedWords = [];
       await this.translateFile(filePath);
@@ -50,6 +51,7 @@ export abstract class Translate {
   };
 
   private translateFile = async (filePath: string): Promise<void> => {
+    const spinner = yoctoSpinner({ text: 'Translating...' }).start();
     try {
       this.fileForTranslation = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as JSONObj;
       this.saveTo = path.join(filePath.substring(0, filePath.lastIndexOf('/')), `${argv.to}.json`);
@@ -58,14 +60,16 @@ export abstract class Translate {
       } else {
         await this.translationAlreadyExists();
       }
+      spinner.success('Done!\n');
     } catch (e) {
-      console.log(`${(e as Error).message} at: ${filePath}`);
+      this.printError(e);
+      spinner.error('Error!\n');
     }
   };
 
   private translationDoesNotExists = async (): Promise<void> => {
     if (Object.keys(this.fileForTranslation).length === 0) {
-      console.log(`Nothing to translate, file is empty: ${this.saveTo}`);
+      console.log(`\nNothing to translate, file is empty: ${this.saveTo}`);
       return;
     }
     const valuesForTranslation: string[] = this.getValuesForTranslation(this.fileForTranslation);
@@ -73,13 +77,9 @@ export abstract class Translate {
   };
 
   private translationAlreadyExists = async (): Promise<void> => {
-    try {
-      const existingTranslation = JSON.parse(fs.readFileSync(this.saveTo, 'utf-8')) as JSONObj;
-      this.deleteIfNeeded(existingTranslation);
-      await this.translateIfNeeded(existingTranslation);
-    } catch (e) {
-      console.log(`${(e as Error).message} at: ${this.saveTo}`);
-    }
+    const existingTranslation = JSON.parse(fs.readFileSync(this.saveTo, 'utf-8')) as JSONObj;
+    this.deleteIfNeeded(existingTranslation);
+    await this.translateIfNeeded(existingTranslation);
   };
 
   private deleteIfNeeded = (existingTranslation: JSONObj): void => {
@@ -99,7 +99,7 @@ export abstract class Translate {
       this.fileForTranslation,
     ) as JSONObj;
     if (Object.keys(diffForTranslation).length === 0) {
-      console.log(`Everything already translated for: ${this.saveTo}`);
+      console.log(`\nEverything already translated for: ${this.saveTo}`);
       return;
     }
     const valuesForTranslation: string[] = this.getValuesForTranslation(diffForTranslation);
@@ -134,23 +134,19 @@ export abstract class Translate {
     valuesForTranslation: string[],
     objectBeforeTranslation: JSONObj,
   ): Promise<void> => {
-    try {
-      if (valuesForTranslation.length > argv.maxLinesPerRequest) {
-        const splitted = this.splitValuesForTranslation(valuesForTranslation);
-        const responses: string[] = [];
-        for (const values of splitted) {
-          const response = await this.callTranslateAPI(values);
-          responses.push(response);
-          await delay(argv.delay);
-        }
-        const translated = responses.join(Translate.sentenceDelimiter);
-        this.saveTranslation(this.cleanUpTranslations(translated), objectBeforeTranslation);
-      } else {
-        const translated = await this.callTranslateAPI(valuesForTranslation);
-        this.saveTranslation(this.cleanUpTranslations(translated), objectBeforeTranslation);
+    if (valuesForTranslation.length > argv.maxLinesPerRequest) {
+      const splitted = this.splitValuesForTranslation(valuesForTranslation);
+      const responses: string[] = [];
+      for (const values of splitted) {
+        const response = await this.callTranslateAPI(values);
+        responses.push(response);
+        await delay(argv.delay);
       }
-    } catch (error) {
-      this.printError(error);
+      const translated = responses.join(Translate.sentenceDelimiter);
+      this.saveTranslation(this.cleanUpTranslations(translated), objectBeforeTranslation);
+    } else {
+      const translated = await this.callTranslateAPI(valuesForTranslation);
+      this.saveTranslation(this.cleanUpTranslations(translated), objectBeforeTranslation);
     }
   };
 
@@ -183,7 +179,7 @@ export abstract class Translate {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private printError = (error: any): void => {
     const errorFilePath = this.saveTo.replace(`${argv.to}.json`, `${argv.from}.json`);
-    console.error(`Request error for file: ${errorFilePath}`);
+    console.error(`\nRequest error for file: ${errorFilePath}`);
     console.log(`Status Code: ${error?.response?.status ?? error?.response?.statusCode}`);
     console.log(`Status Text: ${error?.response?.statusText ?? error?.response?.statusMessage}`);
     console.log(
@@ -260,7 +256,7 @@ export abstract class Translate {
   private writeToFile = (content: JSONObj, message: string): void => {
     try {
       fs.writeFileSync(this.saveTo, JSON.stringify(content, null, argv.spaces));
-      console.log(message);
+      console.log(`\n${message}`);
     } catch (e) {
       console.log((e as Error).message);
     }

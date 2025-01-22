@@ -2,16 +2,12 @@
 import { argv } from './translate/cli';
 import { TranslateSupplier } from './translate/translate-supplier';
 
-const main = async () => {
-  try {
-    await TranslateSupplier.getProvider(argv.apiProvider).translate();
-  } catch (e) {
+TranslateSupplier.getProvider(argv.apiProvider)
+  .translate()
+  .catch((e) => {
     if (e instanceof Error) {
-      console.log(e.message);
+      console.error(e.message);
     } else {
-      console.log(e);
+      console.error(e);
     }
-  }
-};
-
-main();
+  });

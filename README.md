@@ -128,6 +128,7 @@ This software uses the following open source packages:
 - [axios](https://github.com/axios/axios)
 - [@google-cloud/translate](https://github.com/googleapis/nodejs-translate)
 - [html-entities](https://github.com/mdevils/html-entities)
+- [yocto-spinner](https://github.com/sindresorhus/yocto-spinner)
 
 ## License
 
