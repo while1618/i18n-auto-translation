@@ -1,13 +1,13 @@
-import { AzureOfficialAPI } from './providers/azure-official-api';
-import { AzureRapidAPI } from './providers/azure-rapid-api';
-import { DeepRapidAPI } from './providers/deep-rapid-api';
-import { DeepLFreeAPI } from './providers/deepl-free-api';
-import { DeepLProAPI } from './providers/deepl-pro-api';
-import { GoogleOfficialAPI } from './providers/google-official-api';
-import { LectoRapidAPI } from './providers/lecto-rapid-api';
-import { LingvanexRapidAPI } from './providers/lingvanex-rapid-api';
-import { NLPRapidAPI } from './providers/nlp-rapid-api';
-import { Translate } from './translate';
+import { AzureOfficialAPI } from './providers/azure-official-api.js';
+import { AzureRapidAPI } from './providers/azure-rapid-api.js';
+import { DeepRapidAPI } from './providers/deep-rapid-api.js';
+import { DeepLFreeAPI } from './providers/deepl-free-api.js';
+import { DeepLProAPI } from './providers/deepl-pro-api.js';
+import { GoogleOfficialAPI } from './providers/google-official-api.js';
+import { LectoRapidAPI } from './providers/lecto-rapid-api.js';
+import { LingvanexRapidAPI } from './providers/lingvanex-rapid-api.js';
+import { NLPRapidAPI } from './providers/nlp-rapid-api.js';
+import { Translate } from './translate.js';
 
 interface Providers {
   'google-official': GoogleOfficialAPI;

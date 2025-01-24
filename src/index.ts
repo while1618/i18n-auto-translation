@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { argv } from './translate/cli';
-import { TranslateSupplier } from './translate/translate-supplier';
+import { argv } from './translate/cli.js';
+import { TranslateSupplier } from './translate/translate-supplier.js';
 
 TranslateSupplier.getProvider(argv.apiProvider)
   .translate()

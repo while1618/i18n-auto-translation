@@ -1,9 +1,9 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { decode, encode } from 'html-entities';
-import { argv } from '../cli';
-import { LectoTranslateResponse } from '../payload';
-import { Translate } from '../translate';
-import { addCustomCert } from '../util';
+import { argv } from '../cli.js';
+import { LectoTranslateResponse } from '../payload.js';
+import { Translate } from '../translate.js';
+import { addCustomCert } from '../util.js';
 
 export class LectoRapidAPI extends Translate {
   private static readonly endpoint: string = 'lecto-translation.p.rapidapi.com';

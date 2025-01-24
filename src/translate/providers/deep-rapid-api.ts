@@ -1,9 +1,9 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { decode, encode } from 'html-entities';
-import { argv } from '../cli';
-import { DeepTranslateResponse } from '../payload';
-import { Translate } from '../translate';
-import { addCustomCert } from '../util';
+import { argv } from '../cli.js';
+import { DeepTranslateResponse } from '../payload.js';
+import { Translate } from '../translate.js';
+import { addCustomCert } from '../util.js';
 
 export class DeepRapidAPI extends Translate {
   private static readonly endpoint: string = 'deep-translate1.p.rapidapi.com';

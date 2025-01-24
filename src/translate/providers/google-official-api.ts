@@ -1,7 +1,7 @@
-import { Translate as GoogleTranslate } from '@google-cloud/translate/build/src/v2';
+import { Translate as GoogleTranslate } from '@google-cloud/translate/build/src/v2/index.js';
 import { decode, encode } from 'html-entities';
-import { argv } from '../cli';
-import { Translate } from '../translate';
+import { argv } from '../cli.js';
+import { Translate } from '../translate.js';
 
 export class GoogleOfficialAPI extends Translate {
   protected callTranslateAPI = async (valuesForTranslation: string[]): Promise<string> => {

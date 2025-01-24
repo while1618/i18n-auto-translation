@@ -1,9 +1,9 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { decode, encode } from 'html-entities';
-import { argv } from '../cli';
-import { NLPTranslateResponse } from '../payload';
-import { Translate } from '../translate';
-import { addCustomCert } from '../util';
+import { argv } from '../cli.js';
+import { NLPTranslateResponse } from '../payload.js';
+import { Translate } from '../translate.js';
+import { addCustomCert } from '../util.js';
 
 export class NLPRapidAPI extends Translate {
   private static readonly endpoint: string = 'nlp-translation.p.rapidapi.com';
