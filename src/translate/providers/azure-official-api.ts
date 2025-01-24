@@ -1,10 +1,10 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import crypto from 'crypto';
 import { decode, encode } from 'html-entities';
-import { argv } from '../cli';
-import { AzureTranslateResponse } from '../payload';
-import { Translate } from '../translate';
-import { addCustomCert } from '../util';
+import { argv } from '../cli.js';
+import { AzureTranslateResponse } from '../payload.js';
+import { Translate } from '../translate.js';
+import { addCustomCert } from '../util.js';
 
 export class AzureOfficialAPI extends Translate {
   private static readonly endpoint: string = 'api.cognitive.microsofttranslator.com';

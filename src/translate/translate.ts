@@ -4,9 +4,9 @@ import { globSync } from 'glob';
 import extend from 'just-extend';
 import path from 'path';
 import yoctoSpinner from 'yocto-spinner';
-import { argv } from './cli';
-import { JSONObj } from './payload';
-import { delay, replaceAll } from './util';
+import { argv } from './cli.js';
+import { type JSONObj } from './payload.js';
+import { delay, replaceAll } from './util.js';
 
 export abstract class Translate {
   public static readonly sentenceDelimiter: string = '\n#__#\n';
