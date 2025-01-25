@@ -63,7 +63,7 @@ export abstract class Translate {
       }
       spinner.success('Done!\n');
     } catch (e) {
-      this.printError(e);
+      this.printError(e, filePath);
       spinner.error('Error!\n');
     }
   };
@@ -177,15 +177,25 @@ export abstract class Translate {
 
   protected abstract callTranslateAPI: (valuesForTranslation: string[]) => Promise<string>;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private printError = (error: any): void => {
-    const errorFilePath = this.saveTo.replace(`${argv.to}.json`, `${argv.from}.json`);
-    console.error(`\nRequest error for file: ${errorFilePath}`);
-    console.log(`Status Code: ${error?.response?.status ?? error?.response?.statusCode}`);
-    console.log(`Status Text: ${error?.response?.statusText ?? error?.response?.statusMessage}`);
-    console.log(
-      `Data: ${JSON.stringify(error?.response?.data) ?? JSON.stringify(error?.errors[0].message)}`,
-    );
+  private printError = (error: unknown, filePath: string): void => {
+    console.error(`\nError for a file: ${filePath}`);
+
+    if (error && typeof error === 'object' && 'response' in error) {
+      const response = (error as { response: unknown }).response;
+      if (response && typeof response === 'object') {
+        console.log(
+          `Status Code: ${'status' in response ? response.status : 'statusCode' in response ? response.statusCode : 'N/A'}`,
+        );
+        console.log(
+          `Status Text: ${'statusText' in response ? response.statusText : 'statusMessage' in response ? response.statusMessage : 'N/A'}`,
+        );
+        console.log(
+          `Data: ${'data' in response ? JSON.stringify(response.data) : 'errors' in error && Array.isArray(error.errors) && error.errors[0] && 'message' in error.errors[0] ? JSON.stringify(error.errors[0].message) : 'N/A'}`,
+        );
+      }
+    } else {
+      console.log(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   };
 
   private saveTranslation = (translations: string, objectBeforeTranslation: JSONObj): void => {
