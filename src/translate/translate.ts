@@ -41,7 +41,8 @@ export abstract class Translate {
       ignore: [`${dirPath}/**/node_modules/**`, `${dirPath}/**/dist/**`],
     });
     if (filePaths.length === 0) {
-      throw new Error(`0 files found for translation in ${dirPath}`);
+      spinner.error(`${filePaths.length} files found.`);
+      throw new Error(`Nothing to translate in: ${dirPath}`);
     }
     spinner.success(`${filePaths.length} files found.`);
     for (const filePath of filePaths) {
