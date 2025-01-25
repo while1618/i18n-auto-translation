@@ -41,8 +41,8 @@ export abstract class Translate {
       ignore: [`${dirPath}/**/node_modules/**`, `${dirPath}/**/dist/**`],
     });
     if (filePaths.length === 0) {
-      spinner.error(`${filePaths.length} files found.`);
-      throw new Error(`Nothing to translate in: ${dirPath}`);
+      spinner.error(`Abort!`);
+      throw new Error(`Nothing to translate in directory: ${dirPath}`);
     }
     spinner.success(`${filePaths.length} files found.`);
     for (const filePath of filePaths) {
@@ -64,7 +64,7 @@ export abstract class Translate {
       spinner.success('Done!\n');
     } catch (e) {
       this.printError(e, filePath);
-      spinner.error('Error!\n');
+      spinner.error('Abort!\n');
     }
   };
 
@@ -194,7 +194,7 @@ export abstract class Translate {
         );
       }
     } else {
-      console.log(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.log(`${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
