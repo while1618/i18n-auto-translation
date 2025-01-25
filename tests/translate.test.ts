@@ -63,6 +63,7 @@ describe('Translate', () => {
 
   it("should translate file from en to sr, translation doesn't exists", async () => {
     process.argv.push('--filePath=./tests/i18n/en.json');
+    process.argv.push('--maxLinesPerRequest=1');
 
     const { Translate } = await import('../src/translate/translate');
     const { AzureOfficialAPI } = await import('../src/translate/providers/azure-official-api');
