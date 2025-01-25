@@ -34,7 +34,7 @@ describe('Bad Arguments', () => {
     process.argv.push('--dirPath=test');
     const { AzureOfficialAPI } = await import('../src/translate/providers/azure-official-api');
     await expect(new AzureOfficialAPI().translate()).rejects.toThrow(
-      '0 files found for translation in test',
+      'Nothing to translate in: test',
     );
   });
 });
