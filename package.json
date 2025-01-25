@@ -11,7 +11,7 @@
     "dist"
   ],
   "scripts": {
-    "start": "NODE_NO_WARNINGS=1 node dist/src/index.js",
+    "start": "node dist/src/index.js",
     "build": "tsc -p tsconfig.build.json",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
