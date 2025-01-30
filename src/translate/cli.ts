@@ -17,6 +17,7 @@ interface Arguments {
   formality: string;
   trim: boolean;
   delay: number;
+  saveTo?: string;
 }
 
 export const argv: Arguments = yargs(process.argv.slice(2))
@@ -120,6 +121,12 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       alias: 'e',
       description: 'Delay between every request made to the translate api.',
       default: 250,
+    },
+    saveTo: {
+      type: 'string',
+      alias: 'v',
+      description:
+        'Override where translated file should be saved. (use only with `--filePath` option)',
     },
   })
   .parseSync();

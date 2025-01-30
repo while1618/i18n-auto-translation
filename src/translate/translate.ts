@@ -27,6 +27,10 @@ export abstract class Translate {
     }
 
     if (argv.dirPath) {
+      if (argv.saveTo) {
+        throw new Error('--saveTo should only be used with --filePath');
+      }
+
       await this.translateFiles(argv.dirPath);
     }
 
@@ -55,7 +59,14 @@ export abstract class Translate {
     const spinner = yoctoSpinner({ text: 'Translating...' }).start();
     try {
       this.fileForTranslation = JSON.parse(fs.readFileSync(filePath, 'utf-8')) as JSONObj;
-      this.saveTo = path.join(filePath.substring(0, filePath.lastIndexOf('/')), `${argv.to}.json`);
+      if (argv.saveTo) {
+        this.saveTo = path.join(argv.saveTo, `${argv.to}.json`);
+      } else {
+        this.saveTo = path.join(
+          filePath.substring(0, filePath.lastIndexOf('/')),
+          `${argv.to}.json`,
+        );
+      }
       if (argv.override || !fs.existsSync(this.saveTo)) {
         await this.translationDoesNotExists();
       } else {

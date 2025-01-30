@@ -33,5 +33,6 @@ describe('CLI', () => {
     expect(argv.formality).toBe('default');
     expect(argv.trim).toBe(true);
     expect(argv.delay).toBe(250);
+    expect(argv.saveTo).toBeUndefined();
   });
 });

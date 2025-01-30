@@ -37,4 +37,13 @@ describe('Bad Arguments', () => {
       'Nothing to translate in directory: test',
     );
   });
+
+  it('should throw error, --saveTo used with --dirPath', async () => {
+    process.argv.push('--dirPath=test');
+    process.argv.push('--saveTo=test');
+    const { AzureOfficialAPI } = await import('../src/translate/providers/azure-official-api');
+    await expect(new AzureOfficialAPI().translate()).rejects.toThrow(
+      '--saveTo should only be used with --filePath',
+    );
+  });
 });
