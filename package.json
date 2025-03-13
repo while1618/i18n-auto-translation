@@ -1,6 +1,6 @@
 {
   "name": "i18n-auto-translation",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "type": "module",
   "description": "Auto translate i18n JSON file(s) to desired language(s).",
   "main": "dist/src/index.js",

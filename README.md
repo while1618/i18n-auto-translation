@@ -21,7 +21,7 @@
     <img src="https://github.com/while1618/i18n-auto-translation/actions/workflows/build.yml/badge.svg" />
   </a>
   <a href="https://www.npmjs.com/package/i18n-auto-translation" alt="NPM Version">
-    <img src="https://img.shields.io/badge/npm-v2.1.1-blue" />
+    <img src="https://img.shields.io/badge/npm-v2.1.2-blue" />
   </a>
   <a href="LICENSE" alt="License">
     <img src="https://img.shields.io/github/license/while1618/i18n-auto-translation" />
