@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@google-cloud/translate": "8.5.0",
-    "axios": "1.7.9",
+    "axios": "1.8.2",
     "deep-object-diff": "1.1.9",
     "glob": "11.0.1",
     "html-entities": "2.5.2",
