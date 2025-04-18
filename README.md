@@ -72,6 +72,7 @@ $ npx i18n-auto-translation -k SUBSCRIPTION_KEY -d PROJECT_DIR -t DESIRED_LANGUA
 | --trim                                    | -i    | Trim string after translation.                                                                            | true            |
 | --delay                                   | -e    | Delay between every request made to the translate api.                                                    | 250             |
 | --saveTo                                  | -v    | Override where translated file should be saved. (use only with `--filePath` option)                       | /               |
+| --glossary                                | -g    | Specify the glossary to use for the translation. Used only by the DeepL API.                              | /               |
 
 ## Demo
 

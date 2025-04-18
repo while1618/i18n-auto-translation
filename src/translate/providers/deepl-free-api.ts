@@ -31,6 +31,7 @@ export class DeepLFreeAPI extends Translate {
         preserve_formatting: true,
         context: argv.context,
         formality: argv.formality,
+        glossary_id: argv.glossary,
       },
       DeepLFreeAPI.axiosConfig,
     );

@@ -18,6 +18,7 @@ interface Arguments {
   trim: boolean;
   delay: number;
   saveTo?: string;
+  glossary?: string;
 }
 
 export const argv: Arguments = yargs(process.argv.slice(2))
@@ -127,6 +128,11 @@ export const argv: Arguments = yargs(process.argv.slice(2))
       alias: 'v',
       description:
         'Override where translated file should be saved. (use only with `--filePath` option)',
+    },
+    glossary: {
+      type: 'string',
+      alias: 'g',
+      description: 'Specify the glossary to use for the translation. Used only by the DeepL API.',
     },
   })
   .parseSync();
