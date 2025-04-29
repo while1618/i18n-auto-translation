@@ -33,6 +33,6 @@ export class DeepRapidAPI extends Translate {
       },
       DeepRapidAPI.axiosConfig,
     );
-    return decode((response as DeepTranslateResponse).data.data.translations.translatedText);
+    return decode((response as DeepTranslateResponse).data.data.translations.translatedText[0]);
   };
 }
