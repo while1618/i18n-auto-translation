@@ -13,6 +13,11 @@ export class DeepLFreeAPI extends Translate {
     },
     responseType: 'json',
   };
+  private static readonly customSkipWordRegex: RegExp = /({{([^{}]+)}}|\{([^{}]+)\})/g;
+
+  protected getSkipWordRegex(): RegExp {
+    return DeepLFreeAPI.customSkipWordRegex;
+  }
 
   constructor() {
     super();
@@ -25,7 +30,7 @@ export class DeepLFreeAPI extends Translate {
     const response = await axios.post(
       `https://${DeepLFreeAPI.endpoint}/v2/translate`,
       {
-        text: [encode(valuesForTranslation.join(Translate.sentenceDelimiter))],
+        text: [valuesForTranslation.join(Translate.sentenceDelimiter)],
         target_lang: argv.to,
         source_lang: argv.from,
         preserve_formatting: true,

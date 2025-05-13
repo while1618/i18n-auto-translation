@@ -136,10 +136,18 @@ export abstract class Translate {
   };
 
   private skipWords(value: string): string {
-    return value.replace(Translate.skipWordRegex, (match: string) => {
+    return value.replace(this.getSkipWordRegex(), (match: string) => {
       this.skippedWords.push(match);
       return `{{${this.skippedWords.length - 1}}}`;
     });
+  }
+
+  protected getSkipWordRegex(): RegExp {
+    return Translate.skipWordRegex;
+  }
+
+  private returnSkippedWords(value: string): string {
+    return value.replace(this.getSkipWordRegex(), () => `${this.skippedWords.shift()}`);
   }
 
   private translateValues = async (
@@ -245,10 +253,6 @@ export abstract class Translate {
 
     return translatedObject;
   };
-
-  private returnSkippedWords(value: string): string {
-    return value.replace(Translate.skipWordRegex, () => `${this.skippedWords.shift()}`);
-  }
 
   private reorderJSONKeys(reference: JSONObj, target: JSONObj): JSONObj {
     const reordered: JSONObj = {};
