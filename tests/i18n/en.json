@@ -3,5 +3,12 @@
   "hello": "Hello",
   "object": {
     "test": "Hello, this is a test"
-  }
+  },
+  "modules.welcome": "Welcome {{companyName}}",
+  "modules.list": "network \"{{departmentName}}\".",
+  "modules.date": "{{creator}} dating from {{date}}",
+  "modules.subTitle": "Support from the <strong>European Union</strong>.",
+  "modules.minAndMax": "<strong>{{min}}</strong> and <strong>{{max}}</strong>",
+  "modules.count": "{{count}} notifications",
+  "modules.created": "{{ count }} accounts"
 }

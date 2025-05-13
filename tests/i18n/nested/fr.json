@@ -1,0 +1,14 @@
+{
+    "example": "Bonjour, voici un exemple",
+    "hello": "Bonjour",
+    "object": {
+      "test": "Bonjour, ceci est un test"
+    },
+    "modules.welcome": "Bienvenue {{companyName}}",
+    "modules.list": "réseau \"{{departmentName}}\".",
+    "modules.date": "{{creator}} datant de {{date}}",
+    "modules.subTitle": "Soutien de l'<strong>Union européenne</strong>.",
+    "modules.minAndMax": "<strong>{{min}}</strong> et <strong>{{max}}</strong>",
+    "modules.count": "{{count}} notifications",
+    "modules.created": "{{ count }} comptes"
+  }
