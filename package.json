@@ -42,7 +42,7 @@
     "html-entities": "2.6.0",
     "just-extend": "6.2.0",
     "yargs": "17.7.2",
-    "yocto-spinner": "0.2.1"
+    "yocto-spinner": "0.2.2"
   },
   "devDependencies": {
     "@types/eslint": "9.6.1",
