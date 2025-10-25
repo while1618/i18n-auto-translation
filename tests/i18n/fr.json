@@ -1,0 +1,5 @@
+{
+    "modules.date": "{{creator}} datant de {{date}}",
+    "modules.subTitle": "Soutien de l'<strong>Union européenne</strong>.",
+    "modules.minAndMax": "<strong>{{min}}</strong> et <strong>{{max}}</strong>"
+}

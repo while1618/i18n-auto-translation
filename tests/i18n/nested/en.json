@@ -1,7 +1,5 @@
 {
-  "example": "Hello, this is an example",
-  "object": {
-    "test": "Hello, this is a test"
-  },
-  "new": "New"
+  "modules.date": "{{creator}} dating from {{date}}",
+  "modules.subTitle": "Support from the <strong>European Union</strong>.",
+  "modules.minAndMax": "<strong>{{min}}</strong> and <strong>{{max}}</strong>"
 }

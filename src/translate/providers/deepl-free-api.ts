@@ -25,7 +25,7 @@ export class DeepLFreeAPI extends Translate {
     const response = await axios.post(
       `https://${DeepLFreeAPI.endpoint}/v2/translate`,
       {
-        text: [encode(valuesForTranslation.join(Translate.sentenceDelimiter))],
+        text: [valuesForTranslation.join(Translate.sentenceDelimiter)],
         target_lang: argv.to,
         source_lang: argv.from,
         preserve_formatting: true,
@@ -35,6 +35,6 @@ export class DeepLFreeAPI extends Translate {
       },
       DeepLFreeAPI.axiosConfig,
     );
-    return decode((response as DeepLTranslateResponse).data.translations[0].text);
+    return (response as DeepLTranslateResponse).data.translations[0].text;
   };
 }
